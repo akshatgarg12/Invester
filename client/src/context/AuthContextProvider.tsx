@@ -12,8 +12,8 @@ const AuthContextProvider: React.FC<any> = ({children}) => {
   useEffect(()=>{
     auth.onAuthStateChanged((u) => {
       if(u){
-        const {displayName, email} = u
-        setUser({displayName, email})
+        const {displayName, email, photoURL} = u
+        setUser({displayName, email, photoURL})
       }else{
         setUser(null)
       }
