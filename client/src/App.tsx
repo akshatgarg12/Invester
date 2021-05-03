@@ -7,7 +7,6 @@ import AuthPage from './components/Pages/Auth';
 import Dashboard from './components/Pages/Dashboard';
 
 function App() {
- 
   return (
     <div className="App">
       <AuthContextProvider>

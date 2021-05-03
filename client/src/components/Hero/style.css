@@ -1,0 +1,30 @@
+.title{
+  font-size: 5rem;
+  font-weight: bold;
+  margin:20px auto;
+  font-family: "Roboto";
+}
+
+@media screen and (max-width : 600px) and (min-width : 360px){
+  .hero{
+    width: 100%;
+  }
+  .title{
+    font-size: 4rem !important;
+  }
+  .logo{
+    height:150px
+  }
+}
+
+@media (max-width : 360px){
+  .hero{
+    width: 100%;
+  }
+  .title{
+    font-size: 3rem !important;
+  }
+  .logo{
+    height:100px
+  }
+}
