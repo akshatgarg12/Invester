@@ -6,7 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AuthPage from './components/Pages/Auth';
 import Dashboard from './components/Pages/Dashboard';
 
-function App() {
+function App(){
   return (
     <div className="App">
       <AuthContextProvider>
