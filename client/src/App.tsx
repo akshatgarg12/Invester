@@ -1,9 +1,10 @@
 import AuthContextProvider from './context/AuthContextProvider'
-import TestComponent from './components/test';
+
 import {BrowserRouter as Router,Switch,Route} from 'react-router-dom'
 
-import HelloWorld from './components/protect';
 import ProtectedRoute from './components/ProtectedRoute';
+import AuthPage from './components/Pages/Auth';
+import Dashboard from './components/Pages/Dashboard';
 
 function App() {
  
@@ -13,9 +14,9 @@ function App() {
         <Router>
           <Switch>
             {/*  Create a login page */}
-            <Route path="/auth" exact component={TestComponent} />
+            <Route path="/auth" exact component={AuthPage} />
             {/* Create a dashboard page */}
-            <ProtectedRoute path="/" component={HelloWorld} />
+            <ProtectedRoute path="/" component={Dashboard} />
           </Switch>
         </Router>    
       </AuthContextProvider>
