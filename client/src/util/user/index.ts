@@ -1,25 +1,23 @@
 import { PortfolioCardProps } from '../../components/PortfolioCard'
 import {database} from '../../config/firebase'
+import {asyncForEach} from '../custom'
 
 
-async function asyncForEach(array:Array<any>, callback: any) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
 
 // current user get from context api
-export const getUserData = async (email : string, callback : (p : PortfolioCardProps)=>void) => {
+export const getUserData = async (email : string) => {
   try{
     const portfolios:Array<PortfolioCardProps> = []
     const db = await database.collection('/users').where("email","==", email).get();
     const user = db.docs[0].data()
     const userPortfolios =  user.portfolios
+
     await asyncForEach(userPortfolios, async (portfolio:any, index:number) => {
      const snap = await portfolio.get()
      const data = snap.data()
      const {name, totalValue, createdAt} = data
      const p: PortfolioCardProps = {
+       id : portfolio.id,
        index,
        name,
        totalValue,
