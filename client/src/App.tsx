@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AuthPage from './components/Pages/Auth';
 import Dashboard from './components/Pages/Dashboard';
 import Navbar from './components/Navbar';
+import PortfolioPage from './components/Pages/Portfolio';
 
 function App(){
   return (
@@ -16,9 +17,10 @@ function App(){
             <Switch>
               {/*  Create a login page */}
               <ProtectedRoute path="/" exact={true} component={Dashboard} />
+              {/* Portfolio page */}
+              <ProtectedRoute path="/portfolio/:id" exact component={PortfolioPage} />
               <Route path="/auth" component={AuthPage} />
               {/* Create a dashboard page */}
-              
             </Switch> 
         </div>
      </AuthContextProvider>
