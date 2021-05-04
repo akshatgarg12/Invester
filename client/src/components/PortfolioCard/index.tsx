@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import ShareIcon from '@material-ui/icons/Share';
+import { useHistory } from 'react-router';
 
 export interface PortfolioCardProps {
   index : number
@@ -56,6 +57,12 @@ const RenderCardInfo: React.FC<{title : string, value : number}> = ({title, valu
 
 const PortfolioCard: React.FC<PortfolioCardProps> = ({index, name, createdAt,totalValue, investment}) => {
   const classes = useStyles();
+  const history = useHistory();
+  
+  const redirectToPortfolioPage = () => {
+    history.push(`/portfolio/${index}`)
+  }
+
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -93,7 +100,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({index, name, createdAt,tot
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
-      <Button variant="outlined">
+      <Button variant="outlined" onClick={redirectToPortfolioPage}>
         Open
       </Button>
       </CardActions> 
