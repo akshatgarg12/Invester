@@ -22,7 +22,7 @@ const AuthPage: React.FC<any> = () => {
           history.push('/')
         })
       }catch(e){
-        console.log(e)
+        console.log("error logging in : ", e)
         setError(e.message)
       }
   }
