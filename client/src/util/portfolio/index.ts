@@ -1,5 +1,4 @@
 import {database} from '../../config/firebase'
-import firebase from 'firebase/app'
 import {asyncForEach} from '../custom'
 
 export const getPortfolioData = async (id:string) => {
