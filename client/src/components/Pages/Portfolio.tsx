@@ -2,6 +2,7 @@
 import { useHistory } from 'react-router'
 import { useAuth } from '../../context/AuthContextProvider'
 import { getCryptoCurrencies, getMutualFunds, getPortfolioData, getStocks } from '../../util/portfolio'
+import Stocks from '../Stocks'
 
 export interface PortfolioPageProps{
     name: any;
@@ -47,6 +48,7 @@ export interface PortfolioPageProps{
     <div>
       <h4>Portfolio Number {data.name} of user {user.displayName}</h4>
       <h4>Total value : {data.totalValue}</h4>
+      <Stocks />
     </div>
   );
 }

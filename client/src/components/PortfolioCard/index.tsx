@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-const RenderCardInfo: React.FC<{title : string, value : number}> = ({title, value}) => {
+export const RenderCardInfo: React.FC<{title : string, value : number | string}> = ({title, value}) => {
   return (
     <Typography variant="subtitle1" color="textSecondary">
       {title} : <Typography color="textPrimary" display="inline"> {value}</Typography>
