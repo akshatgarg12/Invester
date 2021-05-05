@@ -13,6 +13,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import { useHistory } from 'react-router';
 
 export interface PortfolioCardProps {
+  id : string
   index : number
   createdAt: string
   name : string
@@ -55,12 +56,12 @@ const RenderCardInfo: React.FC<{title : string, value : number}> = ({title, valu
   )
 } 
 
-const PortfolioCard: React.FC<PortfolioCardProps> = ({index, name, createdAt,totalValue, investment}) => {
+const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt,totalValue, investment}) => {
   const classes = useStyles();
   const history = useHistory();
   
   const redirectToPortfolioPage = () => {
-    history.push(`/portfolio/${index}`)
+    history.push(`/portfolio/${id}`)
   }
 
   return (

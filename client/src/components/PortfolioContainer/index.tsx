@@ -28,6 +28,7 @@ const PortfolioContainer: React.FC<PortfolioContainerProps> = ({portfolios}) => 
         {portfolios.map((portfolio) => (
           <Grid key={portfolio.index} item>
             <PortfolioCard
+              id = {portfolio.id}
               index = {portfolio.index}
               name = {portfolio.name}
               createdAt = {portfolio.createdAt}

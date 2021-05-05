@@ -19,9 +19,8 @@ const Dashboard: React.FC<DashboardProps> = () => {
     const callData = async () => {
       try{
         setLoading(true)
-        const d = await getUserData(user.email, (p:PortfolioCardProps) => {
-          setPortfolios((prev) => [...prev, p])
-        })
+        const d = await getUserData(user.email)
+        console.log(d)
         setPortfolios(d)
       }
       catch(e){
