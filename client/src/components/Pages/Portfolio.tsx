@@ -1,8 +1,11 @@
- import {useEffect, useState} from 'react'
+import React from 'react';
+import {useEffect, useState} from 'react'
 import { useHistory } from 'react-router'
-import { useAuth } from '../../context/AuthContextProvider'
-import { getCryptoCurrencies, getMutualFunds, getPortfolioData, getStocks } from '../../util/portfolio'
-import Stocks from '../Stocks'
+import {getPortfolioData } from '../../util/portfolio'
+import Investments from '../Investments';
+
+
+
 
 export interface PortfolioPageProps{
     name: any;
@@ -15,7 +18,6 @@ export interface PortfolioPageProps{
 
  const PortfolioPage: React.FC<any> = (props) => {
   const id = props?.match?.params?.id
-  const {user} = useAuth()
   const history = useHistory()
   const [data, setData] = useState<PortfolioPageProps | null>(null) 
   const [loading, setLoading] = useState<boolean>(false) 
@@ -27,9 +29,9 @@ export interface PortfolioPageProps{
        const d:PortfolioPageProps = await getPortfolioData(id)
        console.log(d)
        
-       await Promise.all([getStocks(d.stocks), getMutualFunds(d.mutualFunds), getCryptoCurrencies(d.cryptoCurrencies)]).then((data) => {
-          console.log(data)
-       })
+      //  await Promise.all([getStocks(d.stocks), getMutualFunds(d.mutualFunds), getCryptoCurrencies(d.cryptoCurrencies)]).then((data) => {
+      //     console.log(data)
+      //  })
        setData(d)
       }
       catch(e){
@@ -41,14 +43,17 @@ export interface PortfolioPageProps{
     }
     callData()
   }, [id, history])
+
   if(loading || !data){
     return <h4>Loading...</h4>
-  }
+  }  
   return (
     <div>
-      <h4>Portfolio Number {data.name} of user {user.displayName}</h4>
-      <h4>Total value : {data.totalValue}</h4>
-      <Stocks />
+     <Investments
+        stocks = {data.stocks}
+        mutualFunds = {data.mutualFunds}
+        cryptoCurrencies = {data.cryptoCurrencies}
+     />
     </div>
   );
 }
