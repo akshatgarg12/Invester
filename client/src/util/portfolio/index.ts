@@ -33,39 +33,19 @@ export const getPortfolioData = async (id:string) => {
   // extract stocks , cryptos , mutualFunds by creating three different functions which can be called, later 
 }
 
-
-export const getStocks = async (stockIds : Array<string>) => {
-  const stocks:any = []
+export enum InvestmentType{
+  STOCKS = "stocks",
+  CRYPTO = "cryptoCurrencies",
+  MUTUALFUNDS = "mutualFunds"
+}
+export const getInvestmentData = async (ids:Array<string>, investmentType:InvestmentType ) => {
+  const investmentData:any = []
   const callback = async (id:string) => {
-    const d = await database.collection('stocks').doc(id).get()
+    const d = await database.collection(investmentType).doc(id).get()
     const data = d.data()
-    stocks.push(data)
+    investmentData.push({...data})
   }
-  await asyncForEach(stockIds,callback)
-  return stocks
+  await asyncForEach(ids,callback)
+  return investmentData
 }
 
-
-export const getMutualFunds = async (mutualFundIds : Array<string>) => {
-  const mutualFunds:any = []
-  const callback = async (id:string) => {
-    const d = await database.collection('mutualFunds').doc(id).get()
-    const data = d.data()
-    mutualFunds.push(data)
-  }
-  await asyncForEach(mutualFundIds,callback)
-  return mutualFunds
-}
-
-
-export const getCryptoCurrencies = async (cryptoCurrenciesIds : Array<string>) => {
-  // const refs = cryptoCurrenciesIds.map((id) => `stocks/${id}`)
-  const cryptoCurrencies:any = []
-  const callback = async (id:string) => {
-    const d = await database.collection('cryptoCurrencies').doc(id).get()
-    const data = d.data()
-    cryptoCurrencies.push(data)
-  }
-  await asyncForEach(cryptoCurrenciesIds,callback)
-  return cryptoCurrencies
-}
