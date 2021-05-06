@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoneyIcon from '@material-ui/icons/Money';
-import { getCryptoCurrencies, getMutualFunds, getStocks } from '../../util/portfolio';
+import { getInvestmentData, InvestmentType } from '../../util/portfolio';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
 
@@ -75,9 +75,9 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
 
   const callData = useCallback(async () => {
     try{
-      const s = getStocks(stocks)
-      const c = getCryptoCurrencies(cryptoCurrencies)
-      const m = getMutualFunds(mutualFunds)
+      const s = getInvestmentData(stocks, InvestmentType.STOCKS)
+      const c = getInvestmentData(cryptoCurrencies, InvestmentType.CRYPTO)
+      const m = getInvestmentData(mutualFunds, InvestmentType.MUTUALFUNDS)
       await Promise.all([s,c,m]).then((d) => {
         const x:InvestmentData = {
           stocks : d[0],
