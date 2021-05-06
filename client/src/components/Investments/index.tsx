@@ -9,9 +9,9 @@ import Box from '@material-ui/core/Box';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoneyIcon from '@material-ui/icons/Money';
-import Stocks from '../Stocks';
 import { getCryptoCurrencies, getMutualFunds, getStocks } from '../../util/portfolio';
 import { InvestmentCardProps } from '../InvestmentCard';
+import InvestmentSection from '../InvestmentSection';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -92,7 +92,7 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   }, [stocks, cryptoCurrencies, mutualFunds])
 
   useEffect(() => {
-    console.log("data called")
+    // console.log("data called")
     callData()
   }, [callData])
 
@@ -128,13 +128,13 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Stocks stocks = {data.stocks} />
+          <InvestmentSection data =  {data.stocks} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          Item Two
+          <InvestmentSection data =  {data.cryptoCurrencies} />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          Item Three
+          <InvestmentSection data =  {data.mutualFunds} />
         </TabPanel>
       </SwipeableViews>
     </div>
