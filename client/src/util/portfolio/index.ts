@@ -39,7 +39,7 @@ export const getStocks = async (stockIds : Array<string>) => {
   const callback = async (id:string) => {
     const d = await database.collection('stocks').doc(id).get()
     const data = d.data()
-    stocks.push(data)
+    stocks.push({...data, currentPrice : 486})
   }
   await asyncForEach(stockIds,callback)
   return stocks

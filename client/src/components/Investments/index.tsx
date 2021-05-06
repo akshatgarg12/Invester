@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -10,6 +10,8 @@ import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoneyIcon from '@material-ui/icons/Money';
 import Stocks from '../Stocks';
+import { getCryptoCurrencies, getMutualFunds, getStocks } from '../../util/portfolio';
+import { InvestmentCardProps } from '../InvestmentCard';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -55,11 +57,45 @@ export interface InvestmentsProps{
     cryptoCurrencies: string[];
     mutualFunds: string[];
 }
-
+export interface InvestmentData{
+  stocks : Array<InvestmentCardProps>
+  cryptoCurrencies : Array<InvestmentCardProps>
+  mutualFunds : Array<InvestmentCardProps>
+}
 const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutualFunds}) => {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+
+  const [data, setData] = useState<InvestmentData>({
+    stocks:[],
+    cryptoCurrencies:[],
+    mutualFunds:[]
+  })
+
+  const callData = useCallback(async () => {
+    try{
+      const s = getStocks(stocks)
+      const c = getCryptoCurrencies(cryptoCurrencies)
+      const m = getMutualFunds(mutualFunds)
+      await Promise.all([s,c,m]).then((d) => {
+        const x:InvestmentData = {
+          stocks : d[0],
+          cryptoCurrencies : d[1],
+          mutualFunds : d[2]
+        } 
+        setData(x)
+      }) 
+    }catch(e){
+      console.log(e)
+    }
+  }, [stocks, cryptoCurrencies, mutualFunds])
+
+  useEffect(() => {
+    console.log("data called")
+    callData()
+  }, [callData])
+
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -92,7 +128,7 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Stocks />
+          <Stocks stocks = {data.stocks} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           Item Two
