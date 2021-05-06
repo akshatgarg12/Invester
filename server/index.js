@@ -18,7 +18,7 @@ app.get('/' , async (req, res) => {
 })
 
 app.get('/c' , async (req, res) => {
-  const symbols = ['btc', 'eth', 'doge']
+  const symbols = ['btc', 'eth', 'doge', 'xrp']
   const d = await Crypto.getCurrentPrices(symbols)
   res.send(d)
 })
