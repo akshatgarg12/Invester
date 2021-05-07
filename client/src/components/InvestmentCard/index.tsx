@@ -40,12 +40,19 @@ const useStyles = makeStyles({
   pos: {
     margin: "5px 0",
     borderBottom:"1px solid black"
+  },
+  loss : {
+    color:"red"
+  },
+  gain : {
+    color:"green"
   }
 });
 
 const InvestmentCard: React.FC<InvestmentCardProps> = ({symbol, name, averageBuyPrice, currentPrice, units}) => {
   const classes = useStyles();
   const changePercentage = ((currentPrice - averageBuyPrice)/averageBuyPrice)*100
+  const changeClass:string = changePercentage > 0 ? classes.gain : classes.loss
   return (
     <Card className={classes.root}>
       <CardContent>
@@ -53,7 +60,7 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({symbol, name, averageBuy
           <Typography className={classes.title} color="textPrimary" gutterBottom>
             {symbol}
           </Typography>
-          <Typography className={classes.title} color={changePercentage > 0 ? "primary" : "error"} gutterBottom>
+          <Typography className={`${classes.title} ${changeClass}`} gutterBottom>
            {/* Calculate gain/loss */}
            {changePercentage > 0 && "+" }
             {changePercentage.toString().substr(0,4)} %
