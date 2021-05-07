@@ -14,7 +14,7 @@ const getCoinsBySymbols =async(symbols) => {
   try{
     const response = await axios.request(options)
     const {data} = response
-    const coins = symbols.map((s) => data.find((c) => c.symbol === s))
+    const coins = symbols.map((s) => data.find((c) => c.symbol.toLowerCase() === s.toLowerCase()))
     return coins
   }catch(e){
     console.log(e)
@@ -44,7 +44,7 @@ const getCurrentPrices = async (symbols) => {
     const d = coins.map((c, index) => {
       return {
       symbol : c.symbol,
-      currentPrice : data[c.id]
+      currentPrice : data[c.id].inr
     }
   })
     return d

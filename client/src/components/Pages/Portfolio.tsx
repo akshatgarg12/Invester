@@ -28,10 +28,6 @@ export interface PortfolioPageProps{
        setLoading(true)
        const d:PortfolioPageProps = await getPortfolioData(id)
        console.log(d)
-       
-      //  await Promise.all([getStocks(d.stocks), getMutualFunds(d.mutualFunds), getCryptoCurrencies(d.cryptoCurrencies)]).then((data) => {
-      //     console.log(data)
-      //  })
        setData(d)
       }
       catch(e){
