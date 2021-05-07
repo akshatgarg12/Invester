@@ -1,3 +1,4 @@
+import firebase from 'firebase/app'
 import {database} from '../../config/firebase'
 import {asyncForEach} from '../custom'
 import {getCurrentPrice} from '../current'
@@ -10,7 +11,6 @@ export const getPortfolioData = async (id:string) => {
       // throw error
       throw new Error("Portfolio not found")
     }
-    
     // console.log(portfolio.stocks[0].id)
     const stocks: Array<string> = portfolio.stocks.map((s:any) => s.id)
     const cryptoCurrencies: Array<string> = portfolio.cryptoCurrencies.map((s:any) => s.id)
@@ -52,4 +52,22 @@ export const getInvestmentData = async (ids:Array<string>, investmentType:Invest
   const updatedData = await getCurrentPrice(symbols, investmentType)
   investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice}))
   return investmentData
+}
+
+export interface InvestmentDetails{
+  name : string
+  symbol : string
+  averageBuyPrice : number
+  units : number
+}
+
+export const createInvestment = async (details:InvestmentDetails, investmentType:InvestmentType, portfolioId:string) => {
+  const document = await database.collection(investmentType).add(details)
+  console.log(document)
+  // document.id
+
+  const portfolioUpdate = await database.collection('portfolios').doc(portfolioId).update({
+    [investmentType] : firebase.firestore.FieldValue.arrayUnion(document)
+  })
+  console.log(portfolioUpdate)
 }

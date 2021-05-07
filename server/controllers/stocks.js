@@ -24,6 +24,7 @@ const getCurrentPrice = async (symbol) => {
 }
 
 const getCurrentPrices = async (symbols) => {
+  console.log(symbols)
   const apiCalls = symbols.map((s) => getCurrentPrice(s.toUpperCase()))
   try{
     const data = await Promise.all(apiCalls)
