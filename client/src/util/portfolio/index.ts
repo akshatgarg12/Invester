@@ -1,5 +1,6 @@
 import {database} from '../../config/firebase'
 import {asyncForEach} from '../custom'
+import {getCurrentPrice} from '../current'
 
 export const getPortfolioData = async (id:string) => {
   try{
@@ -39,13 +40,16 @@ export enum InvestmentType{
   MUTUALFUNDS = "mutualFunds"
 }
 export const getInvestmentData = async (ids:Array<string>, investmentType:InvestmentType ) => {
-  const investmentData:any = []
+  let investmentData:any = []
   const callback = async (id:string) => {
     const d = await database.collection(investmentType).doc(id).get()
     const data = d.data()
     investmentData.push({...data})
   }
   await asyncForEach(ids,callback)
+  // after getting data from firebase, call server for current data
+  const symbols = investmentData.map((i:any) => i.symbol)
+  const updatedData = await getCurrentPrice(symbols, investmentType)
+  investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice}))
   return investmentData
 }
-

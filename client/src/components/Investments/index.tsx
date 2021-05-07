@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -12,6 +12,7 @@ import MoneyIcon from '@material-ui/icons/Money';
 import { getInvestmentData, InvestmentType } from '../../util/portfolio';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -51,7 +52,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-
 export interface InvestmentsProps{
     stocks: string[];
     cryptoCurrencies: string[];
@@ -66,35 +66,39 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-
+  
   const [data, setData] = useState<InvestmentData>({
     stocks:[],
     cryptoCurrencies:[],
     mutualFunds:[]
   })
-
-  const callData = useCallback(async () => {
-    try{
-      const s = getInvestmentData(stocks, InvestmentType.STOCKS)
-      const c = getInvestmentData(cryptoCurrencies, InvestmentType.CRYPTO)
-      const m = getInvestmentData(mutualFunds, InvestmentType.MUTUALFUNDS)
-      await Promise.all([s,c,m]).then((d) => {
-        const x:InvestmentData = {
-          stocks : d[0],
-          cryptoCurrencies : d[1],
-          mutualFunds : d[2]
-        } 
-        setData(x)
-      }) 
-    }catch(e){
-      console.log(e)
-    }
-  }, [stocks, cryptoCurrencies, mutualFunds])
-
+  const [loading, setLoading] = useState<boolean>(false);
+  
+   
   useEffect(() => {
-    // console.log("data called")
+    const callData = async () => {
+      try{
+        setLoading(true)
+        // firebase database calls
+        const s = getInvestmentData(stocks, InvestmentType.STOCKS)
+        const c = getInvestmentData(cryptoCurrencies, InvestmentType.CRYPTO)
+        const m = getInvestmentData(mutualFunds, InvestmentType.MUTUALFUNDS)
+        await Promise.all([s,c,m]).then((d) => {
+          const x:InvestmentData = {
+            stocks : d[0],
+            cryptoCurrencies : d[1],
+            mutualFunds : d[2]
+          } 
+          setData(x)
+        })
+      }catch(e){
+        console.log(e)
+      }finally{
+        setLoading(false)
+      }
+    }
     callData()
-  }, [callData])
+  }, [stocks, cryptoCurrencies, mutualFunds])
 
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -104,7 +108,7 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
- 
+  if(loading) return <h4>Loading data....</h4>
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">

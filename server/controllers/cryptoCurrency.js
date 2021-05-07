@@ -1,5 +1,4 @@
 const axios = require('axios')
-const coinsDatabase = require('../database/coins.json')
 
 const getCoinsBySymbols =async(symbols) => {
   const url = `https://api.coingecko.com/api/v3/coins/list?include_platform=false`
@@ -15,7 +14,7 @@ const getCoinsBySymbols =async(symbols) => {
   try{
     const response = await axios.request(options)
     const {data} = response
-    const coins = symbols.map((s) => data.find((c) => c.symbol === s))
+    const coins = symbols.map((s) => data.find((c) => c.symbol.toLowerCase() === s.toLowerCase()))
     return coins
   }catch(e){
     console.log(e)
@@ -45,7 +44,7 @@ const getCurrentPrices = async (symbols) => {
     const d = coins.map((c, index) => {
       return {
       symbol : c.symbol,
-      currentPrice : data[c.id]
+      currentPrice : data[c.id].inr
     }
   })
     return d

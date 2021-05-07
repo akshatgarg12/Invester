@@ -35,7 +35,11 @@ const getCurrentPrice = async (symbol) => {
   try{
     const response = await axios.request(options)
     const {data} = response
-    return data
+    
+    return {
+      symbol ,
+      currentPrice : data.data[0].nav
+    }
   }catch(e){
     console.log(e)
     throw e
@@ -46,7 +50,6 @@ const getCurrentPrices = async (symbols) => {
   const apiCalls = symbols.map((s) => getCurrentPrice(s))
   try{
     const data = await Promise.all(apiCalls)
-    console.log(data)
     return data
   }catch(e){
     console.log(e)
