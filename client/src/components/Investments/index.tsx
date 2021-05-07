@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoneyIcon from '@material-ui/icons/Money';
-import { getInvestmentData, InvestmentType } from '../../util/portfolio';
+import { createInvestment, getInvestmentData, InvestmentDetails, InvestmentType } from '../../util/portfolio';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
 
@@ -66,7 +66,13 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  
+  // const newInvestment:InvestmentDetails = {
+  //   name : "steel authority of india",
+  //   symbol : "SAIL",
+  //   units : 10,
+  //   averageBuyPrice : 126.72
+  // }
+ 
   const [data, setData] = useState<InvestmentData>({
     stocks:[],
     cryptoCurrencies:[],
@@ -111,6 +117,9 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   if(loading) return <h4>Loading data....</h4>
   return (
     <div className={classes.root}>
+      {/* <button onClick = {() => {
+         createInvestment(newInvestment, InvestmentType.STOCKS, "7ZTemRitHsQrGD2lJMfk")
+      }}>Add a new</button> */}
       <AppBar position="static" color="default">
         <Tabs
           value={value}
