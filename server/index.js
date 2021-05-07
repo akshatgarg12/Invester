@@ -11,25 +11,25 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors({origin:true}))
 
-app.get('/' , async (req, res) => {
-  const symbols = ["TWTR", "TSLA", "AMZN", "RELIANCE", "WIPRO", "ADANIPORTS"]
+app.get('/stocks' , async (req, res) => {
+  const {symbols} = req.body
   const d = await Stocks.getCurrentPrices(symbols)
   res.send(d)
 })
 
-app.get('/c' , async (req, res) => {
-  const symbols = ['btc', 'eth', 'doge', 'xrp']
+app.get('/crypto' , async (req, res) => {
+  const {symbols} = req.body
   const d = await Crypto.getCurrentPrices(symbols)
   res.send(d)
 })
 
-app.get('/mf' , async (req, res) => {
-  const symbols = ['117620', '103482']
+app.get('/mutualFunds' , async (req, res) => {
+  const {symbols} = req.body
   const d = await MutualFunds.getCurrentPrices(symbols)
   res.send(d)
 })
 
-app.get('/:mf' , async (req, res) => {
+app.get('/search/mutualFund/:mf' , async (req, res) => {
   const {mf} = req.params
   const d = await MutualFunds.findMutualFund(mf)
   res.send(d)

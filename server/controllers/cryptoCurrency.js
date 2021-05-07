@@ -1,5 +1,4 @@
 const axios = require('axios')
-const coinsDatabase = require('../database/coins.json')
 
 const getCoinsBySymbols =async(symbols) => {
   const url = `https://api.coingecko.com/api/v3/coins/list?include_platform=false`
