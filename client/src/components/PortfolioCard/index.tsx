@@ -11,6 +11,7 @@ import { red } from '@material-ui/core/colors';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import ShareIcon from '@material-ui/icons/Share';
 import { useHistory } from 'react-router';
+import { Portfolio } from '../../util/portfolio';
 
 export interface PortfolioCardProps {
   id : string
@@ -59,7 +60,7 @@ export const RenderCardInfo: React.FC<{title : string, value : number | string}>
 const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt,totalValue, investment}) => {
   const classes = useStyles();
   const history = useHistory();
-  
+  const portfolio = new Portfolio(id)
   const redirectToPortfolioPage = () => {
     history.push(`/portfolio/${id}`)
   }
@@ -95,7 +96,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
           />
       </CardContent>
       <CardActions>
-        <IconButton aria-label="delete the portfolio">
+        <IconButton aria-label="delete the portfolio" onClick={portfolio.delete}>
           <DeleteOutline />
         </IconButton>
         <IconButton aria-label="share">

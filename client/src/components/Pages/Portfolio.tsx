@@ -1,11 +1,8 @@
 import React from 'react';
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useMemo} from 'react'
 import { useHistory } from 'react-router'
-import {getPortfolioData } from '../../util/portfolio'
+import {Portfolio } from '../../util/portfolio'
 import Investments from '../Investments';
-
-
-
 
 export interface PortfolioPageProps{
     name: any;
@@ -18,6 +15,7 @@ export interface PortfolioPageProps{
 
  const PortfolioPage: React.FC<any> = (props) => {
   const id = props?.match?.params?.id
+  const portfolio = useMemo(()=> new Portfolio(id), [id])
   const history = useHistory()
   const [data, setData] = useState<PortfolioPageProps | null>(null) 
   const [loading, setLoading] = useState<boolean>(false) 
@@ -26,7 +24,7 @@ export interface PortfolioPageProps{
     const callData = async  () => {
       try{
        setLoading(true)
-       const d:PortfolioPageProps = await getPortfolioData(id)
+       const d:PortfolioPageProps = await portfolio.get()
        console.log(d)
        setData(d)
       }
@@ -38,7 +36,7 @@ export interface PortfolioPageProps{
       }
     }
     callData()
-  }, [id, history])
+  }, [portfolio, history])
 
   if(loading || !data){
     return <h4>Loading...</h4>
