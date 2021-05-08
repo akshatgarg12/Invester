@@ -9,16 +9,15 @@ import {PersonOutline} from '@material-ui/icons';
 import {useHistory} from 'react-router-dom'
 
 
-import {loginWithGoogle} from '../../util/auth'
+import {Auth} from '../../util/auth'
 
 const AuthPage: React.FC<any> = () => {
   const history = useHistory()
   const [error, setError] = useState<string>("")
-
+  const auth = new Auth()
   const handleLogin = () => {
       try{
-        loginWithGoogle(()=>{
-          console.log("push to /")
+        auth.login(()=>{
           history.push('/')
         })
       }catch(e){

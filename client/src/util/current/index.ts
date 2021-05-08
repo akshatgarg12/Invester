@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {getCurrentStocksPriceURL, getCurrentMutualFundPriceURL, getCurrentCryptoPriceURL
 } from '../../constant'
-import { InvestmentType } from '../portfolio'
+import { InvestmentType } from '../investment'
 
 export const InvestmentURLs = {
   "stocks" : getCurrentStocksPriceURL,

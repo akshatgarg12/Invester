@@ -8,10 +8,9 @@ import Menu from '@material-ui/core/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
 import React from 'react';
-// import { Button } from '@material-ui/core';
 
 
-import {logout} from '../../util/auth'
+import {Auth} from '../../util/auth'
 import { useHistory } from 'react-router-dom'
 import {useAuth} from '../../context/AuthContextProvider'
 
@@ -52,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   const classes = useStyles();
   const history = useHistory();
   const {user} = useAuth();
-
+  const auth = new Auth()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -109,7 +108,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                   <Typography variant="h6">{user.displayName}</Typography>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>Settings</MenuItem>
-                <MenuItem onClick={logout}>Logout</MenuItem>
+                <MenuItem onClick={auth.logout}>Logout</MenuItem>
               </Menu>
             </div>
         </Toolbar>
