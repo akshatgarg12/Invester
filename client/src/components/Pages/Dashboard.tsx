@@ -1,7 +1,7 @@
 import {useAuth} from '../../context/AuthContextProvider'
 import { Container } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { getUserData } from '../../util/user';
+import { User } from '../../util/user';
 import  { PortfolioCardProps } from '../PortfolioCard';
 import PortfolioContainer from '../PortfolioContainer';
 
@@ -18,8 +18,9 @@ const Dashboard: React.FC<DashboardProps> = () => {
     if(!user) return
     const callData = async () => {
       try{
+        const currentUser = new User(user.email)
         setLoading(true)
-        const d = await getUserData(user.email)
+        const d = await currentUser.getData()
         console.log(d)
         setPortfolios(d)
       }
