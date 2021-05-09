@@ -15,6 +15,8 @@ export interface InvestmentDetails{
   symbol : string
   averageBuyPrice : number
   units : number
+  market ?: string 
+  shop ?: string
 }
 export class Investment{
   async get(ids:Array<string>, investmentType:InvestmentType){
@@ -27,22 +29,20 @@ export class Investment{
       }
       await asyncForEach(ids,callback)
       // after getting data from firebase, call server for current data
+      let symbols : Array<any> = []
       if(investmentType === InvestmentType.STOCKS){
-        const symbols = investmentData.map((i:any) => {
+        symbols = investmentData.map((i:any) => {
           const {symbol, market} = i;
           return  {
             symbol, market
           }
         })
-        const updatedData = await getCurrentPrice(symbols, investmentType)
-        investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice}))
-        return investmentData
       }else{
-        const symbols = investmentData.map((i:any) => i.symbol)
-        const updatedData = await getCurrentPrice(symbols, investmentType)
-        investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice}))
-        return investmentData
+        symbols = investmentData.map((i:any) => i.symbol)
       }
+        const updatedData = await getCurrentPrice(symbols, investmentType)
+        investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice, id:ids[i]}))
+        return investmentData
       
     }catch(e){
       console.log(e)
@@ -67,18 +67,32 @@ export class Investment{
     }
     
   }
-  async delete(){
-    console.log("delete an investment")
+  async delete(id : string, portfolioId : string, investmentType:InvestmentType){
+    try{
+      const document = database.collection(investmentType).doc(id)
+      await document.delete()
+      console.log(document)
+      const portfolioUpdate = await database.collection('portfolios').doc(portfolioId).update({
+        [investmentType] : firebase.firestore.FieldValue.arrayRemove(document)
+      })
+      console.log(portfolioUpdate)
+    }catch(e){
+      console.log(e)
+    }
   }
   async create(details:InvestmentDetails, investmentType:InvestmentType, portfolioId:string){
-    const document = await database.collection(investmentType).add(details)
-    console.log(document)
-    // document.id
-  
-    const portfolioUpdate = await database.collection('portfolios').doc(portfolioId).update({
-      [investmentType] : firebase.firestore.FieldValue.arrayUnion(document)
-    })
-    console.log(portfolioUpdate)
+    try{
+      const document = await database.collection(investmentType).add(details)
+      console.log(document)
+      // document.id
+      const portfolioUpdate = await database.collection('portfolios').doc(portfolioId).update({
+        [investmentType] : firebase.firestore.FieldValue.arrayUnion(document)
+      })
+      console.log(portfolioUpdate)
+    }catch(e){
+      console.log(e)
+    }
+   
   }
   async update(){
     console.log("update an investment")

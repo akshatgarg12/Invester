@@ -11,7 +11,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoneyIcon from '@material-ui/icons/Money';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
-import { Investment } from '../../util/investment';
+import { Investment, InvestmentType } from '../../util/investment';
 
 
 interface TabPanelProps {
@@ -67,13 +67,7 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const investment = useMemo(()=> new Investment() , [])
-  // const newInvestment:InvestmentDetails = {
-  //   name : "steel authority of india",
-  //   symbol : "SAIL",
-  //   units : 10,
-  //   averageBuyPrice : 126.72
-  // }
- 
+  
   const [data, setData] = useState<InvestmentData>({
     stocks:[],
     cryptoCurrencies:[],
@@ -108,10 +102,8 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   };
   if(loading) return <h4>Loading data....</h4>
   return (
-    <div className={classes.root}>
-      {/* <button onClick = {() => {
-         createInvestment(newInvestment, InvestmentType.STOCKS, "7ZTemRitHsQrGD2lJMfk")
-      }}>Add a new</button> */}
+
+    <div className={classes.root}>    
       <AppBar position="static" color="default">
         <Tabs
           value={value}
@@ -133,13 +125,19 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <InvestmentSection data =  {data.stocks} />
+          <InvestmentSection 
+          data = {data.stocks} 
+          type={InvestmentType.STOCKS} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <InvestmentSection data =  {data.cryptoCurrencies} />
+          <InvestmentSection 
+          data = {data.cryptoCurrencies}
+          type={InvestmentType.CRYPTO} />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <InvestmentSection data =  {data.mutualFunds} />
+          <InvestmentSection 
+          data = {data.mutualFunds} 
+          type={InvestmentType.MUTUALFUNDS} />
         </TabPanel>
       </SwipeableViews>
     </div>

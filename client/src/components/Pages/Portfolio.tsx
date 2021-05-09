@@ -4,6 +4,7 @@ import { useHistory } from 'react-router'
 import {Portfolio } from '../../util/portfolio'
 import Investments from '../Investments';
 
+
 export interface PortfolioPageProps{
     name: any;
     createdAt: any;
