@@ -10,8 +10,7 @@ export const InvestmentURLs = {
 }
 
 
-export const getCurrentPrice = async (symbols:Array<string>, type : InvestmentType) => {
-  // console.log("runnnign")
+export const getCurrentPrice = async (symbols:Array<any>, type : InvestmentType) => {
   const url = InvestmentURLs[type]
   const response = await axios(url, {
     method:"POST",
