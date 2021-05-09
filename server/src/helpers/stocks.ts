@@ -1,12 +1,22 @@
 import axios from 'axios'
 import {config} from 'dotenv'
 config()
-
+enum Market{
+  NSE = "NSE",
+  NASDAQ = "NASDAQ"
+}
 interface StockInfoType{
   symbol : string,
-  market : "NSE" | "NASDAQ"
+  market : Market
 }
-
+const findWithAttr = (array:Array<StockInfoType>,value:any) => {
+  for(var i = 0; i < array.length; i += 1) {
+      if(array[i]["symbol"] === value.symbol && array[i]["market"] === value.market) {
+          return i;
+      }
+  }
+  return -1;
+}
 class Stock{
   baseUrlNASDAQ:string = "https://realstonks.p.rapidapi.com"
   baseUrlNSE : string = "https://latest-stock-price.p.rapidapi.com/any"
@@ -58,8 +68,8 @@ class Stock{
          const {symbol , lastPrice } = s;
           return {
             symbol,
-            currentPrice : lastPrice,
-            market : "NSE"
+            market : Market.NSE,
+            currentPrice : lastPrice
           }
        })
      }catch(e){
@@ -71,8 +81,8 @@ class Stock{
   async getCurrentPrices(symbols:Array<StockInfoType>){
     console.log(symbols)
     let apiCalls:Array<Promise<any>> = []
-    const NASDAQstocks = symbols.filter((s) => s.market === "NASDAQ")
-    const NSEstocks = symbols.filter((s) => s.market === "NSE")
+    const NASDAQstocks = symbols.filter((s) => s.market === Market.NASDAQ)
+    const NSEstocks = symbols.filter((s) => s.market === Market.NSE)
     if(NASDAQstocks.length){
       apiCalls = NASDAQstocks.map((s) => this.getPriceFromNASDAQ(s))
     }
@@ -84,7 +94,10 @@ class Stock{
       let NASDAQprices = data.slice(0,NASDAQstocks.length)
       let NSEprices = data.slice(NASDAQstocks.length)[0]
       const prices =  [...NSEprices, ...NASDAQprices]
-      return prices
+      console.log(prices)
+      return prices.sort(function(a, b){  
+        return findWithAttr(symbols, a) - findWithAttr(symbols, b)
+      });
     }catch(e){
       console.log(e)
       throw e

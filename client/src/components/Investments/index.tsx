@@ -67,13 +67,7 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const investment = useMemo(()=> new Investment() , [])
-  // const newInvestment:InvestmentDetails = {
-  //   name : "steel authority of india",
-  //   symbol : "SAIL",
-  //   units : 10,
-  //   averageBuyPrice : 126.72
-  // }
- 
+  
   const [data, setData] = useState<InvestmentData>({
     stocks:[],
     cryptoCurrencies:[],
@@ -110,7 +104,7 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   return (
     <div className={classes.root}>
       {/* <button onClick = {() => {
-         createInvestment(newInvestment, InvestmentType.STOCKS, "7ZTemRitHsQrGD2lJMfk")
+        "open a investment adding form"
       }}>Add a new</button> */}
       <AppBar position="static" color="default">
         <Tabs
@@ -133,13 +127,13 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <InvestmentSection data =  {data.stocks} />
+          <InvestmentSection data = {data.stocks} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <InvestmentSection data =  {data.cryptoCurrencies} />
+          <InvestmentSection data = {data.cryptoCurrencies} />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <InvestmentSection data =  {data.mutualFunds} />
+          <InvestmentSection data = {data.mutualFunds} />
         </TabPanel>
       </SwipeableViews>
     </div>

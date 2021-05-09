@@ -3,13 +3,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Box } from '@material-ui/core';
+import { Box, IconButton } from '@material-ui/core';
 import { RenderCardInfo } from '../PortfolioCard';
+import { DeleteOutline } from '@material-ui/icons';
 
 
 export interface InvestmentCardProps {
+  id : string
   symbol : string
   name : string
   averageBuyPrice : number
@@ -49,7 +50,7 @@ const useStyles = makeStyles({
   }
 });
 
-const InvestmentCard: React.FC<InvestmentCardProps> = ({symbol, name, averageBuyPrice, currentPrice, units}) => {
+const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units}) => {
   const classes = useStyles();
   const changePercentage = ((currentPrice - averageBuyPrice)/averageBuyPrice)*100
   const changeClass:string = changePercentage > 0 ? classes.gain : classes.loss
@@ -85,10 +86,11 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({symbol, name, averageBuy
           title = "investment value"
           value = {4420}
         />
-       
       </CardContent>
       <CardActions>
-        <Button size="small">More Info</Button>
+        <IconButton onClick = {() => console.log("id : ", id)}>
+          <DeleteOutline />
+        </IconButton>
       </CardActions>
     </Card>
   );

@@ -16,15 +16,17 @@ createStyles({
 );
 const InvestmentSection: React.FC<InvestmentSectionProps> = ({data}) => {
   const classes = useStyles(); 
+  console.log(data)
   return (
     // create a card component which will take values and will render here.
     <Container>
        <Grid container justify="center" spacing={1} className={classes.root}>
        {
         data.map((s:InvestmentCardProps, index : number) => {
-          const {name, symbol, averageBuyPrice, currentPrice, units} = s
+          const {id, name, symbol, averageBuyPrice, currentPrice, units} = s
           return (
               <InvestmentCard
+                id = {id}
                 key={index} 
                 name={name}
                 symbol={symbol}
