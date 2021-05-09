@@ -9,7 +9,7 @@ export class Auth{
     });
     provider.addScope('profile');
     provider.addScope('email');
-   
+
     auth
     .signInWithPopup(provider)
     .then((result) => {

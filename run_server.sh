@@ -1,2 +1,2 @@
 cd server
-nodemon index.js
+npm run dev
