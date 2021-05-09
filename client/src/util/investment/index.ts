@@ -69,7 +69,9 @@ export class Investment{
   }
   async delete(id : string, portfolioId : string, investmentType:InvestmentType){
     try{
-      const document = await database.collection(investmentType).doc(id).delete()
+      const document = database.collection(investmentType).doc(id)
+      await document.delete()
+      console.log(document)
       const portfolioUpdate = await database.collection('portfolios').doc(portfolioId).update({
         [investmentType] : firebase.firestore.FieldValue.arrayRemove(document)
       })

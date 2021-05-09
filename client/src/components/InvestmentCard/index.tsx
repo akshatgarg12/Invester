@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import { Box, IconButton } from '@material-ui/core';
 import { RenderCardInfo } from '../PortfolioCard';
 import { DeleteOutline } from '@material-ui/icons';
+import { Investment, InvestmentType } from '../../util/investment';
+import { useParams } from 'react-router';
 
 
 export interface InvestmentCardProps {
@@ -16,6 +18,7 @@ export interface InvestmentCardProps {
   averageBuyPrice : number
   currentPrice : number
   units : number
+  type : InvestmentType 
 }
  
 const useStyles = makeStyles({
@@ -50,8 +53,10 @@ const useStyles = makeStyles({
   }
 });
 
-const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units}) => {
+const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units, type}) => {
+  const {id:portfolioId}:any = useParams()
   const classes = useStyles();
+  const investment = new Investment()
   const changePercentage = ((currentPrice - averageBuyPrice)/averageBuyPrice)*100
   const changeClass:string = changePercentage > 0 ? classes.gain : classes.loss
   return (
@@ -88,7 +93,9 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         />
       </CardContent>
       <CardActions>
-        <IconButton onClick = {() => console.log("id : ", id)}>
+        <IconButton onClick = {()=>{
+          investment.delete(id,portfolioId,type)
+        }}>
           <DeleteOutline />
         </IconButton>
       </CardActions>

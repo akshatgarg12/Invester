@@ -11,7 +11,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoneyIcon from '@material-ui/icons/Money';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
-import { Investment } from '../../util/investment';
+import { Investment, InvestmentType } from '../../util/investment';
 
 
 interface TabPanelProps {
@@ -102,10 +102,8 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   };
   if(loading) return <h4>Loading data....</h4>
   return (
-    <div className={classes.root}>
-      {/* <button onClick = {() => {
-        "open a investment adding form"
-      }}>Add a new</button> */}
+
+    <div className={classes.root}>    
       <AppBar position="static" color="default">
         <Tabs
           value={value}
@@ -127,13 +125,19 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <InvestmentSection data = {data.stocks} />
+          <InvestmentSection 
+          data = {data.stocks} 
+          type={InvestmentType.STOCKS} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <InvestmentSection data = {data.cryptoCurrencies} />
+          <InvestmentSection 
+          data = {data.cryptoCurrencies}
+          type={InvestmentType.CRYPTO} />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <InvestmentSection data = {data.mutualFunds} />
+          <InvestmentSection 
+          data = {data.mutualFunds} 
+          type={InvestmentType.MUTUALFUNDS} />
         </TabPanel>
       </SwipeableViews>
     </div>
