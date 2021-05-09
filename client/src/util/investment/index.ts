@@ -27,10 +27,23 @@ export class Investment{
       }
       await asyncForEach(ids,callback)
       // after getting data from firebase, call server for current data
-      const symbols = investmentData.map((i:any) => i.symbol)
-      const updatedData = await getCurrentPrice(symbols, investmentType)
-      investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice}))
-      return investmentData
+      if(investmentType === InvestmentType.STOCKS){
+        const symbols = investmentData.map((i:any) => {
+          const {symbol, market} = i;
+          return  {
+            symbol, market
+          }
+        })
+        const updatedData = await getCurrentPrice(symbols, investmentType)
+        investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice}))
+        return investmentData
+      }else{
+        const symbols = investmentData.map((i:any) => i.symbol)
+        const updatedData = await getCurrentPrice(symbols, investmentType)
+        investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice}))
+        return investmentData
+      }
+      
     }catch(e){
       console.log(e)
       throw e
