@@ -9,6 +9,9 @@ import { RenderCardInfo } from '../PortfolioCard';
 import { DeleteOutline } from '@material-ui/icons';
 import { Investment, InvestmentType } from '../../util/investment';
 import { useParams } from 'react-router';
+import ConfirmDeleteModal from '../Modals/ConfirmDelete';
+import { getPortfolioData } from '../../util/custom';
+import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 
 
 export interface InvestmentCardProps {
@@ -56,10 +59,40 @@ const useStyles = makeStyles({
 const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units, type}) => {
   const {id:portfolioId}:any = useParams()
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  
+  const {dispatch} = usePortfolio()
   const investment = new Investment()
+  const handleClose = async (response : "CONFIRM" | "CANCEL") => {
+    try{
+      setLoading(true)
+      if(response === "CONFIRM"){
+        await investment.delete(id,portfolioId,type)
+        const updatedData = await getPortfolioData(portfolioId)
+        dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
+      }
+    }catch(e){
+      console.log(e)
+    }finally{
+      setOpen(false);
+      setLoading(false)
+    }
+   
+
+  };
   const changePercentage = ((currentPrice - averageBuyPrice)/averageBuyPrice)*100
   const changeClass:string = changePercentage > 0 ? classes.gain : classes.loss
   return (
+    <>
+    <ConfirmDeleteModal 
+      loading = {loading}
+      open = {open}
+      handleClose = {handleClose}
+    />
     <Card className={classes.root}>
       <CardContent>
         <Box display="flex" justifyContent="space-between">
@@ -69,7 +102,7 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
           <Typography className={`${classes.title} ${changeClass}`} gutterBottom>
            {/* Calculate gain/loss */}
            {changePercentage > 0 && "+" }
-            {changePercentage.toString().substr(0,4)} %
+            {changePercentage.toFixed(2)} %
           </Typography>
         </Box>
         <Typography className={classes.pos} color="textSecondary">
@@ -89,17 +122,19 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         />
          <RenderCardInfo 
           title = "investment value"
-          value = {(units * averageBuyPrice).toPrecision(10)}
+          value = {(units * averageBuyPrice).toFixed(2)}
         />
       </CardContent>
       <CardActions>
         <IconButton onClick = {()=>{
-          investment.delete(id,portfolioId,type)
+          handleOpen()
         }}>
+          {/* investment.delete(id,portfolioId,type) */}
           <DeleteOutline />
         </IconButton>
       </CardActions>
     </Card>
+    </>
   );
 }
  

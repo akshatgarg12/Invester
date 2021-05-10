@@ -56,9 +56,9 @@ export class Investment{
       const m = this.get(mutualFunds, InvestmentType.MUTUALFUNDS)
       const d = await Promise.all([s,c,m])
       const x:InvestmentData = {
-        stocks : d[0],
-        cryptoCurrencies : d[1],
-        mutualFunds : d[2]
+        stocks : d[0].reverse(),
+        cryptoCurrencies : d[1].reverse(),
+        mutualFunds : d[2].reverse()
       } 
       return x
     }catch(e){
