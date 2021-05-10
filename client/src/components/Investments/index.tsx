@@ -12,6 +12,9 @@ import MoneyIcon from '@material-ui/icons/Money';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
 import { Investment, InvestmentType } from '../../util/investment';
+import { Container } from '@material-ui/core';
+import CustomDrawer from '../CustomDrawer';
+import AddInvestmentForm from '../Forms/AddInvestment';
 
 
 interface TabPanelProps {
@@ -46,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "#f1f1f1",
     width: "98%",
     maxWidth:"1024px",
-    margin:"20px auto",
-    height : "80vh",
+    margin:"10px auto",
+    height : "90vh",
     overflowY:"scroll"
   },
 }));
@@ -102,7 +105,10 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
   };
   if(loading) return <h4>Loading data....</h4>
   return (
-
+    <Container>
+    <CustomDrawer 
+      component = {<AddInvestmentForm />}
+    />
     <div className={classes.root}>    
       <AppBar position="static" color="default">
         <Tabs
@@ -141,6 +147,7 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
         </TabPanel>
       </SwipeableViews>
     </div>
+    </Container>
   );
 }
  
