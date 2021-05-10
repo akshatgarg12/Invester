@@ -15,22 +15,24 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
+      width: "98%",
       maxWidth:"1024px",
-      width:"98%",
-      margin:"5px auto"
+      margin:"5px auto",
+      overflowX:"hidden"
     },
     menuButton: {
-
+      width:"100px"
     },
     hide: {
       display: 'none',
     },
     drawer: {
       width: drawerWidth,
-      flexShrink: 0,
+      // flexShrink: 0,
     },
     drawerPaper: {
       width: drawerWidth,
+      overflowX:"hidden"
     },
     drawerHeader: {
       display: 'flex',
@@ -39,23 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       // necessary for content to be below app bar
       ...theme.mixins.toolbar,
       justifyContent: 'flex-end',
-    },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginLeft: -drawerWidth,
-    },
-    contentShift: {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    },
+    }
   }),
 );
 
