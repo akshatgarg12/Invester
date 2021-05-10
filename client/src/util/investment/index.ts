@@ -63,7 +63,7 @@ export class Investment{
       return x
     }catch(e){
       console.log(e)
-      throw escape
+      throw e
     }
     
   }

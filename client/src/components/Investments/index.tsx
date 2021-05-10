@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,10 +11,11 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoneyIcon from '@material-ui/icons/Money';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
-import { Investment, InvestmentType } from '../../util/investment';
+import { InvestmentType } from '../../util/investment';
 import { Container } from '@material-ui/core';
 import CustomDrawer from '../CustomDrawer';
 import AddInvestmentForm from '../Forms/AddInvestment';
+
 
 
 interface TabPanelProps {
@@ -55,55 +56,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface InvestmentsProps{
-    stocks: string[];
-    cryptoCurrencies: string[];
-    mutualFunds: string[];
-}
 export interface InvestmentData{
   stocks : Array<InvestmentCardProps>
   cryptoCurrencies : Array<InvestmentCardProps>
   mutualFunds : Array<InvestmentCardProps>
 }
-const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutualFunds}) => {
+const Investments: React.FC<InvestmentData> = ({stocks, cryptoCurrencies, mutualFunds}) => {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  const investment = useMemo(()=> new Investment() , [])
-  
-  const [data, setData] = useState<InvestmentData>({
-    stocks:[],
-    cryptoCurrencies:[],
-    mutualFunds:[]
-  })
-  const [loading, setLoading] = useState<boolean>(false);
-  
-   
-  useEffect(() => {
-    const callData = async () => {
-      try{
-        setLoading(true)
-        // firebase database calls
-        const x = await investment.getAll(stocks, cryptoCurrencies, mutualFunds)
-        setData(x)
-      }catch(e){
-        console.log(e)
-      }finally{
-        setLoading(false)
-      }
-    }
-    callData()
-  }, [stocks, cryptoCurrencies, mutualFunds,investment])
-
-
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
-
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
-  if(loading) return <h4>Loading data....</h4>
+
   return (
     <Container>
     <CustomDrawer 
@@ -132,17 +100,17 @@ const Investments: React.FC<InvestmentsProps> = ({stocks, cryptoCurrencies, mutu
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
           <InvestmentSection 
-          data = {data.stocks} 
+          data = {stocks} 
           type={InvestmentType.STOCKS} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <InvestmentSection 
-          data = {data.cryptoCurrencies}
+          data = {cryptoCurrencies}
           type={InvestmentType.CRYPTO} />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           <InvestmentSection 
-          data = {data.mutualFunds} 
+          data = {mutualFunds} 
           type={InvestmentType.MUTUALFUNDS} />
         </TabPanel>
       </SwipeableViews>

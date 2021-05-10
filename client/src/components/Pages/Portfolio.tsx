@@ -1,7 +1,8 @@
 import React from 'react';
-import {useEffect, useState, useMemo} from 'react'
+import {useEffect, useState} from 'react'
 import { useHistory } from 'react-router'
-import {Portfolio } from '../../util/portfolio'
+import { usePortfolio , PortfolioReducerAction} from '../../context/PortfolioContextProvider';
+import { getPortfolioData } from '../../util/custom';
 import Investments from '../Investments';
 
 
@@ -16,18 +17,16 @@ export interface PortfolioPageProps{
 
  const PortfolioPage: React.FC<any> = (props) => {
   const id = props?.match?.params?.id
-  const portfolio = useMemo(()=> new Portfolio(id), [id])
-  const history = useHistory()
-  const [data, setData] = useState<PortfolioPageProps | null>(null) 
+  const history = useHistory() 
+  const {data, dispatch} = usePortfolio();
   const [loading, setLoading] = useState<boolean>(false) 
   useEffect(()=> {
     // create a function to take index and email of user and return the portfolio info.
     const callData = async  () => {
       try{
        setLoading(true)
-       const d:PortfolioPageProps = await portfolio.get()
-       console.log(d)
-       setData(d)
+       const d:any = await getPortfolioData(id)
+       dispatch({type : PortfolioReducerAction.SET, payload : d})
       }
       catch(e){
         console.log(e)
@@ -37,10 +36,10 @@ export interface PortfolioPageProps{
       }
     }
     callData()
-  }, [portfolio, history])
+  }, [id, dispatch, history])
 
   if(loading || !data){
-    return <h4>Loading...</h4>
+    return <h4>Loading Data...</h4>
   }  
   return (
     <div>
