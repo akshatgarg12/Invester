@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer } from "react";
+import { InvestmentData } from "../components/Investments";
 
 const PortfolioContext = createContext<any>(null)
 
@@ -9,7 +10,7 @@ export enum PortfolioReducerAction{
   SET = "SET_DATA"
 }
 
-const reducer = (state:any, action:any) => {
+const reducer = (state:InvestmentData | null, action:any) => {
   switch(action.type){
     case PortfolioReducerAction.SET:
       return action.payload   
