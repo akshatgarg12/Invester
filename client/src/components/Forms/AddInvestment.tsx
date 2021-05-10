@@ -4,6 +4,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Box, Button , Select, MenuItem} from '@material-ui/core';
 import {InvestmentType, InvestmentDetails, Investment} from '../../util/investment'
 import { useParams } from 'react-router';
+import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
+import { getPortfolioData } from '../../util/custom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,19 +40,21 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const {id: portfolioId}:any = useParams()
-  const [data, setData] = useState<InvestmentDetails>({
-      name : "",
-      symbol : "",
-      averageBuyPrice : 0,
-      units : 0,
-      market : "",
-      shop : ""
-  })
+  const initialData:InvestmentDetails = {
+    name : "",
+    symbol : "",
+    averageBuyPrice : 0,
+    units : 0,
+    market : "",
+    shop : ""
+}
+  const [data, setData] = useState<InvestmentDetails>(initialData)
   const [type, setType] = useState<InvestmentType>(InvestmentType.STOCKS)
-
+  const {dispatch} = usePortfolio()
   const handleChange = (event: React.ChangeEvent<any>) => {
     if(event.target.name === "type"){
       setType(event.target.value)
+      setData(initialData)
       return
     }
     setData((prev) => ({
@@ -67,6 +71,9 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
     try{
       setLoading(true)
       await investment.create(data, type,portfolioId)
+      const updatedData = await getPortfolioData(portfolioId)
+      // only update the data of the investment added [TODO]
+      dispatch({type:PortfolioReducerAction.SET, payload:updatedData})
     }catch(e){ 
       console.log(e)
     }finally{

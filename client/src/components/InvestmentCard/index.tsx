@@ -69,7 +69,7 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
           <Typography className={`${classes.title} ${changeClass}`} gutterBottom>
            {/* Calculate gain/loss */}
            {changePercentage > 0 && "+" }
-            {changePercentage.toString().substr(0,4)} %
+            {changePercentage.toFixed(2)} %
           </Typography>
         </Box>
         <Typography className={classes.pos} color="textSecondary">
@@ -89,7 +89,7 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         />
          <RenderCardInfo 
           title = "investment value"
-          value = {(units * averageBuyPrice).toPrecision(10)}
+          value = {(units * averageBuyPrice).toFixed(2)}
         />
       </CardContent>
       <CardActions>
