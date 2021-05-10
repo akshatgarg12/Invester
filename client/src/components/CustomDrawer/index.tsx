@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -14,23 +15,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
-    },
-    appBar: {
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    appBarShift: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+      maxWidth:"1024px",
+      width:"98%",
+      margin:"5px auto"
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+
     },
     hide: {
       display: 'none',
@@ -84,15 +74,16 @@ const CustomDrawer:React.FC<any> = ({component}) => {
 
   return (
     <div className={classes.root}>
-        <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge={false}
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-        <AddCircleOutlined />
-      </IconButton>
+       <Button
+        variant="outlined"
+        color="primary"
+        className={clsx(classes.menuButton, open && classes.hide)}
+        onClick={handleDrawerOpen}
+        startIcon={<AddCircleOutlined />}
+        >
+        Add 
+      </Button>
+
       <Drawer
         className={classes.drawer}
         variant="persistent"

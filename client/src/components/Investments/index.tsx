@@ -45,15 +45,12 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container : {
-    width: "98%",
-    maxWidth:"1024px",
-    margin:"20px auto"
-  },
   root: {
     backgroundColor: "#f1f1f1",
-    width: "100%",
-    height : "80vh",
+    width: "98%",
+    maxWidth:"1024px",
+    margin:"10px auto",
+    height : "90vh",
     overflowY:"scroll"
   },
 }));

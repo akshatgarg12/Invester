@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     maxWidth : "300px",
     width :"100%",
     borderRadius:"20px",
-    margin : "10px"
+    margin : "5px"
   },
   bullet: {
     display: 'inline-block',
@@ -89,7 +89,7 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         />
          <RenderCardInfo 
           title = "investment value"
-          value = {4420}
+          value = {(units * averageBuyPrice).toPrecision(10)}
         />
       </CardContent>
       <CardActions>
