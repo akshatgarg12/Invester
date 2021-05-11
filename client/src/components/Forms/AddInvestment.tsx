@@ -5,7 +5,7 @@ import { Box, Button , Select, MenuItem} from '@material-ui/core';
 import {InvestmentType, InvestmentDetails, Investment} from '../../util/investment'
 import { useParams } from 'react-router';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
-import { getPortfolioData } from '../../util/custom';
+import { updatePortfolioData } from '../../util/custom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,7 +50,7 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
 }
   const [data, setData] = useState<InvestmentDetails>(initialData)
   const [type, setType] = useState<InvestmentType>(InvestmentType.STOCKS)
-  const {dispatch} = usePortfolio()
+  const {data:collection, dispatch} = usePortfolio()
   const handleChange = (event: React.ChangeEvent<any>) => {
     if(event.target.name === "type"){
       setType(event.target.value)
@@ -70,10 +70,11 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
     console.log(data, type)
     try{
       setLoading(true)
-      await investment.create(data, type,portfolioId)
-      const updatedData = await getPortfolioData(portfolioId)
-      // only update the data of the investment added [TODO]
-      dispatch({type:PortfolioReducerAction.SET, payload:updatedData})
+      const id:string|undefined = await investment.create(data, type,portfolioId)
+      if(id){
+        const updatedData = await updatePortfolioData(type, collection, id, "ADD")
+        dispatch({type:PortfolioReducerAction.SET, payload:updatedData})
+      }
     }catch(e){ 
       console.log(e)
     }finally{

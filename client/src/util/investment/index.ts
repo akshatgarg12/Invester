@@ -42,6 +42,7 @@ export class Investment{
       }
         const updatedData = await getCurrentPrice(symbols, investmentType)
         investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice, id:ids[i]}))
+        // console.log(investmentData)
         return investmentData
       
     }catch(e){
@@ -76,6 +77,7 @@ export class Investment{
         [investmentType] : firebase.firestore.FieldValue.arrayRemove(document)
       })
       console.log(portfolioUpdate)
+      return document.id
     }catch(e){
       console.log(e)
     }
@@ -89,10 +91,10 @@ export class Investment{
         [investmentType] : firebase.firestore.FieldValue.arrayUnion(document)
       })
       console.log(portfolioUpdate)
+      return document.id
     }catch(e){
       console.log(e)
     }
-   
   }
   async update(){
     console.log("update an investment")

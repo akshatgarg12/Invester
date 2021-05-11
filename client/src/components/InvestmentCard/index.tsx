@@ -10,7 +10,7 @@ import { DeleteOutline } from '@material-ui/icons';
 import { Investment, InvestmentType } from '../../util/investment';
 import { useParams } from 'react-router';
 import ConfirmDeleteModal from '../Modals/ConfirmDelete';
-import { getPortfolioData } from '../../util/custom';
+import { getPortfolioData, updatePortfolioData } from '../../util/custom';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 
 
@@ -65,15 +65,17 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
     setOpen(true);
   };
   
-  const {dispatch} = usePortfolio()
+  const {data:initialData, dispatch} = usePortfolio()
   const investment = new Investment()
   const handleClose = async (response : "CONFIRM" | "CANCEL") => {
     try{
       setLoading(true)
       if(response === "CONFIRM"){
-        await investment.delete(id,portfolioId,type)
-        const updatedData = await getPortfolioData(portfolioId)
-        dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
+        const deleteId = await investment.delete(id,portfolioId,type)
+        if(deleteId){
+          const updatedData = await updatePortfolioData(type, initialData,deleteId, "DELETE")
+          dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
+        }
       }
     }catch(e){
       console.log(e)
