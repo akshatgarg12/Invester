@@ -83,8 +83,6 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
       setOpen(false);
       setLoading(false)
     }
-   
-
   };
   const changePercentage = ((currentPrice - averageBuyPrice)/averageBuyPrice)*100
   const changeClass:string = changePercentage > 0 ? classes.gain : classes.loss
