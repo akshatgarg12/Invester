@@ -25,7 +25,8 @@ export interface PortfolioCardProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      maxWidth: 345,
+      width:"100%",
+      maxWidth: "345px",
       margin:"10px"
     },
     media: {
@@ -78,10 +79,10 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
         subheader={createdAt}
       />
       <CardContent>
-          <RenderCardInfo 
+          {/* <RenderCardInfo 
             title = "Total invested amount"
             value = {totalValue}
-          />
+          /> */}
           <RenderCardInfo 
             title = "Stocks"
             value = {investment.stocks}

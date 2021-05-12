@@ -4,16 +4,17 @@ import { useEffect, useState } from 'react';
 import { User } from '../../util/user';
 import  { PortfolioCardProps } from '../PortfolioCard';
 import PortfolioContainer from '../PortfolioContainer';
-
+import { Portfolio } from '../../util/portfolio';
+import Button from '@material-ui/core/Button'
 export interface DashboardProps {
   
 }
  
 const Dashboard: React.FC<DashboardProps> = () => {
-  // use this user to call for data from firebase, get the protfolios and basic user info.
   const {user} = useAuth()
   const [portfolios, setPortfolios] = useState<Array<PortfolioCardProps>>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const portfolio = new Portfolio(undefined)
   useEffect(() => {
     if(!user) return
     const callData = async () => {
@@ -38,6 +39,10 @@ const Dashboard: React.FC<DashboardProps> = () => {
 
   return (  
     <Container>
+      <Button onClick = {()=>{
+        // testing the function
+        portfolio.create(user.email, "test")
+      }}>Add</Button>
       <PortfolioContainer portfolios={portfolios} />
     </Container>
   );

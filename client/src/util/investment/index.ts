@@ -21,6 +21,7 @@ export interface InvestmentDetails{
 export class Investment{
   async get(ids:Array<string>, investmentType:InvestmentType){
     try{
+      if(ids.length === 0) return []
       let investmentData:any = []
       const callback = async (id:string) => {
         const d = await database.collection(investmentType).doc(id).get()

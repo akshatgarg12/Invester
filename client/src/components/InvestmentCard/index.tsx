@@ -10,7 +10,7 @@ import { DeleteOutline } from '@material-ui/icons';
 import { Investment, InvestmentType } from '../../util/investment';
 import { useParams } from 'react-router';
 import ConfirmDeleteModal from '../Modals/ConfirmDelete';
-import { getPortfolioData, updatePortfolioData } from '../../util/custom';
+import { updatePortfolioData } from '../../util/custom';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 
 

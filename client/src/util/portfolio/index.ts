@@ -1,8 +1,9 @@
 import {database} from '../../config/firebase'
+import firebase from 'firebase/app'
 
 export class Portfolio{
   id:string | undefined = undefined
-  constructor(id : string){
+  constructor(id : string | undefined = undefined){
     this.id = id
   } 
   async get(){
@@ -33,6 +34,29 @@ export class Portfolio{
       }
     }
     catch(e){
+      console.log(e)
+      throw e
+    }
+  }
+  async create(email:string, name:string){
+    try{
+      const portfolio:any = {
+        name,
+        stocks : [],
+        cryptoCurrencies : [],
+        mutualFunds : [],
+        createdAt : new Date()
+      }
+      const document = await database.collection("portfolios").add(portfolio)
+      // document.id
+      const userDocs = await database.collection('users').where("email", "==", email).get()
+      const user = userDocs.docs[0]
+      user.ref.update({
+        "portfolios" : firebase.firestore.FieldValue.arrayUnion(document)
+      })
+      console.log(document.id);
+      return document.id
+    }catch(e){
       console.log(e)
       throw e
     }
