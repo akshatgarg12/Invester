@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import PortfolioCard, {PortfolioCardProps} from '../PortfolioCard';
+import { useUser } from '../../context/UserContextProvider';
 
 
 
@@ -20,12 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }),
 );
-const PortfolioContainer: React.FC<PortfolioContainerProps> = ({portfolios}) => {
+const PortfolioContainer: React.FC<any> = () => {
   const classes = useStyles();
+  const {data : portfolios} = useUser()
   return (
-    // <Grid item xs={12} lg={12}>
       <Grid container justify="center" spacing={3} className={classes.root}>
-        {portfolios.map((portfolio) => (
+        {portfolios && portfolios.map((portfolio:PortfolioCardProps) => (
           <Grid key={portfolio.index} item>
             <PortfolioCard
               id = {portfolio.id}
@@ -38,7 +39,6 @@ const PortfolioContainer: React.FC<PortfolioContainerProps> = ({portfolios}) => 
           </Grid>
         ))}
       </Grid>
-  // </Grid>
   );
 }
  

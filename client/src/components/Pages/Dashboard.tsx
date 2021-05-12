@@ -1,8 +1,8 @@
 import {useAuth} from '../../context/AuthContextProvider'
+import {UserDataReducerActions, useUser} from '../../context/UserContextProvider'
 import { Container } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { User } from '../../util/user';
-import  { PortfolioCardProps } from '../PortfolioCard';
 import PortfolioContainer from '../PortfolioContainer';
 import { Portfolio } from '../../util/portfolio';
 import Button from '@material-ui/core/Button'
@@ -12,9 +12,9 @@ export interface DashboardProps {
  
 const Dashboard: React.FC<DashboardProps> = () => {
   const {user} = useAuth()
-  const [portfolios, setPortfolios] = useState<Array<PortfolioCardProps>>([])
   const [loading, setLoading] = useState<boolean>(false)
   const portfolio = new Portfolio(undefined)
+  const {dispatch}  = useUser()
   useEffect(() => {
     if(!user) return
     const callData = async () => {
@@ -22,8 +22,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
         const currentUser = new User(user.email)
         setLoading(true)
         const d = await currentUser.getData()
-        console.log(d)
-        setPortfolios(d)
+        dispatch({type : UserDataReducerActions.SET, payload : d})
       }
       catch(e){
         // handle error here
@@ -34,7 +33,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
       }
     }
     callData()
-  }, [user])
+  }, [user, dispatch])
   if(loading) return <h4>Loading...</h4>
 
   return (  
@@ -43,7 +42,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
         // testing the function
         portfolio.create(user.email, "test")
       }}>Add</Button>
-      <PortfolioContainer portfolios={portfolios} />
+      <PortfolioContainer  />
     </Container>
   );
 }
