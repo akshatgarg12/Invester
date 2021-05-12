@@ -3,9 +3,9 @@ import InvestmentCard, {InvestmentCardProps} from "../InvestmentCard";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { InvestmentType } from "../../util/investment";
+import { usePortfolio } from "../../context/PortfolioContextProvider";
 
 export interface InvestmentSectionProps {
-  data : Array<InvestmentCardProps>
   type : InvestmentType
 }
 const useStyles = makeStyles((theme: Theme) =>
@@ -16,15 +16,17 @@ createStyles({
   }
 }),
 );
-const InvestmentSection: React.FC<InvestmentSectionProps> = ({data,type}) => {
+const InvestmentSection: React.FC<InvestmentSectionProps> = ({type}) => {
   const classes = useStyles(); 
+  const {data} = usePortfolio() 
+
   return (
     // create a card component which will take values and will render here.
     <div>
     <Container>
        <Grid container justify="center" spacing={1} className={classes.root}>
        {
-        data.map((s:InvestmentCardProps, index : number) => {
+        data[type].map((s:InvestmentCardProps, index : number) => {
           const {id, name, symbol, averageBuyPrice, currentPrice, units} = s
           return (
               <InvestmentCard

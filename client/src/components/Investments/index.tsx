@@ -18,6 +18,7 @@ import AddInvestmentForm from '../Forms/AddInvestment';
 
 
 
+
 interface TabPanelProps {
   children?: React.ReactNode;
   dir?: string;
@@ -61,7 +62,7 @@ export interface InvestmentData{
   cryptoCurrencies : Array<InvestmentCardProps>
   mutualFunds : Array<InvestmentCardProps>
 }
-const Investments: React.FC<InvestmentData> = ({stocks, cryptoCurrencies, mutualFunds}) => {
+const Investments: React.FC<any> = () => {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -100,17 +101,14 @@ const Investments: React.FC<InvestmentData> = ({stocks, cryptoCurrencies, mutual
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
           <InvestmentSection 
-          data = {stocks} 
           type={InvestmentType.STOCKS} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <InvestmentSection 
-          data = {cryptoCurrencies}
           type={InvestmentType.CRYPTO} />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           <InvestmentSection 
-          data = {mutualFunds} 
           type={InvestmentType.MUTUALFUNDS} />
         </TabPanel>
       </SwipeableViews>

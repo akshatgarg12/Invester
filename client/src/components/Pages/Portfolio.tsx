@@ -43,11 +43,7 @@ export interface PortfolioPageProps{
   }  
   return (
     <div>
-     <Investments
-        stocks = {data.stocks}
-        mutualFunds = {data.mutualFunds}
-        cryptoCurrencies = {data.cryptoCurrencies}
-     />
+     <Investments />
     </div>
   );
 }
