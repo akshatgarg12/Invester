@@ -1,9 +1,6 @@
 import { createContext, useContext, useReducer } from "react";
 import { PortfolioCardProps } from "../components/PortfolioCard";
-interface UserContextProviderProps{
-  data:Array<PortfolioCardProps>,
-  dispatch : any
-}
+
 const UserContext = createContext<any>(null)
 
 export const useUser = () => useContext(UserContext)
