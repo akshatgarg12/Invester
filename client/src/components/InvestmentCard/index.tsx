@@ -10,7 +10,7 @@ import { DeleteOutline } from '@material-ui/icons';
 import { Investment, InvestmentType } from '../../util/investment';
 import { useParams } from 'react-router';
 import ConfirmDeleteModal from '../Modals/ConfirmDelete';
-import { getPortfolioData, updatePortfolioData } from '../../util/custom';
+import { updatePortfolioData } from '../../util/custom';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 
 
@@ -83,8 +83,6 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
       setOpen(false);
       setLoading(false)
     }
-   
-
   };
   const changePercentage = ((currentPrice - averageBuyPrice)/averageBuyPrice)*100
   const changeClass:string = changePercentage > 0 ? classes.gain : classes.loss

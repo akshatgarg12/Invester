@@ -12,20 +12,23 @@ import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import ShareIcon from '@material-ui/icons/Share';
 import { useHistory } from 'react-router';
 import { Portfolio } from '../../util/portfolio';
-
+import { useAuth } from '../../context/AuthContextProvider';
+import ConfirmDeleteModal from '../Modals/ConfirmDelete';
+import {useState} from 'react'
 export interface PortfolioCardProps {
   id : string
   index : number
   createdAt: string
   name : string
-  totalValue : number
+  totalValue ?: number
   investment : any
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      maxWidth: 345,
+      width:"100%",
+      maxWidth: "345px",
       margin:"10px"
     },
     media: {
@@ -60,12 +63,43 @@ export const RenderCardInfo: React.FC<{title : string, value : number | string}>
 const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt,totalValue, investment}) => {
   const classes = useStyles();
   const history = useHistory();
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const {user} = useAuth()
   const portfolio = new Portfolio(id)
+
+
   const redirectToPortfolioPage = () => {
     history.push(`/portfolio/${id}`)
   }
-
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = async (response : "CONFIRM" | "CANCEL") => {
+    try{
+      setLoading(true)
+      if(response === "CONFIRM"){
+        const deleteId = await portfolio.delete(user.email)
+        console.log(deleteId)
+        // if(deleteId){
+        //   const updatedData = await updatePortfolioData(type, initialData,deleteId, "DELETE")
+        //   dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
+        // }
+      }
+    }catch(e){
+      console.log(e)
+    }finally{
+      setOpen(false);
+      setLoading(false)
+    }
+  };
   return (
+    <>
+    <ConfirmDeleteModal 
+     loading = {loading}
+     open = {open}
+     handleClose = {handleClose}
+    />
     <Card className={classes.root}>
       <CardHeader
         avatar={
@@ -78,10 +112,6 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
         subheader={createdAt}
       />
       <CardContent>
-          <RenderCardInfo 
-            title = "Total invested amount"
-            value = {totalValue}
-          />
           <RenderCardInfo 
             title = "Stocks"
             value = {investment.stocks}
@@ -96,7 +126,9 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
           />
       </CardContent>
       <CardActions>
-        <IconButton aria-label="delete the portfolio" onClick={portfolio.delete}>
+        <IconButton aria-label="delete the portfolio" onClick={()=>{
+          handleOpen()
+        }}>
           <DeleteOutline />
         </IconButton>
         <IconButton aria-label="share">
@@ -107,6 +139,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
       </Button>
       </CardActions> 
     </Card>
+    </>
   );
 }
  
