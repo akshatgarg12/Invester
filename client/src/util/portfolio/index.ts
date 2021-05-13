@@ -55,7 +55,7 @@ export class Portfolio{
       user.ref.update({
         "portfolios" : firebase.firestore.FieldValue.arrayUnion(document)
       })
-      console.log(document.id);
+   
       return document.id
     }catch(e){
       console.log(e)

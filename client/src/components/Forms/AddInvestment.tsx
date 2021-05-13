@@ -73,7 +73,9 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
       const id:string|undefined = await investment.create(data, type,portfolioId)
       if(id){
         const updatedData = await updatePortfolioData(type, collection, id, "ADD")
-        dispatch({type:PortfolioReducerAction.SET, payload:updatedData})
+        if(updatedData){
+          dispatch({type:PortfolioReducerAction.SET, payload:updatedData})
+        }
       }
     }catch(e){ 
       console.log(e)

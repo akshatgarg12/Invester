@@ -15,6 +15,8 @@ import { Portfolio } from '../../util/portfolio';
 import { useAuth } from '../../context/AuthContextProvider';
 import ConfirmDeleteModal from '../Modals/ConfirmDelete';
 import {useState} from 'react'
+import { User } from '../../util/user';
+import { UserDataReducerActions, useUser } from '../../context/UserContextProvider';
 export interface PortfolioCardProps {
   id : string
   index : number
@@ -48,14 +50,19 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       backgroundColor: red[500],
     },
+    span:{
+      display:"inline",
+      color:"black"
+    }
   }),
 );
 
 
 export const RenderCardInfo: React.FC<{title : string, value : number | string}> = ({title, value}) => {
+  const classes = useStyles()
   return (
-    <Typography variant="subtitle1" color="textSecondary">
-      {title} : <Typography color="textPrimary" display="inline"> {value}</Typography>
+    <Typography variant="subtitle1" color="textSecondary" component="span" display="block">
+      {title} : <span className={classes.span}> {value} </span>
     </Typography>
   )
 } 
@@ -66,8 +73,9 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const {user} = useAuth()
+  const {dispatch} = useUser()
   const portfolio = new Portfolio(id)
-
+  const userObj = new User(user.uid)
 
   const redirectToPortfolioPage = () => {
     history.push(`/portfolio/${id}`)
@@ -80,11 +88,13 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
       setLoading(true)
       if(response === "CONFIRM"){
         const deleteId = await portfolio.delete(user.uid)
+        const updatedData = await userObj.getData()
+        console.log(updatedData);
+        if(updatedData){
+          dispatch({type : UserDataReducerActions.SET, payload: updatedData})
+        }
         console.log(deleteId)
-        // if(deleteId){
-        //   const updatedData = await updatePortfolioData(type, initialData,deleteId, "DELETE")
-        //   dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
-        // }
+     
       }
     }catch(e){
       console.log(e)
