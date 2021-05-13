@@ -9,27 +9,24 @@ import Navbar from './components/Navbar';
 import PortfolioPage from './components/Pages/Portfolio';
 import PortfolioContextProvider from './context/PortfolioContextProvider';
 import UserContextProvider from './context/UserContextProvider';
+import Providers from './context';
 
 function App(){
   return (
     <Router>
-      <AuthContextProvider>
-        <UserContextProvider>
-         <PortfolioContextProvider>
-            <div className="App">
-              <Navbar />
-                <Switch>
-                  {/*  Create a login page */}
-                  <ProtectedRoute path="/" exact={true} component={Dashboard} />
-                  {/* Portfolio page */}
-                  <ProtectedRoute path="/portfolio/:id" exact component={PortfolioPage}/>
-                  <Route path="/auth" component={AuthPage} />
-                  {/* Create a dashboard page */}
-                </Switch> 
-            </div>
-          </PortfolioContextProvider>
-        </UserContextProvider>
-     </AuthContextProvider>
+      <Providers>
+        <div className="App">
+          <Navbar />
+            <Switch>
+              {/*  Create a login page */}
+              <ProtectedRoute path="/" exact={true} component={Dashboard} />
+              {/* Portfolio page */}
+              <ProtectedRoute path="/portfolio/:id" exact component={PortfolioPage}/>
+              <Route path="/auth" component={AuthPage} />
+              {/* Create a dashboard page */}
+            </Switch> 
+        </div>
+     </Providers>
     </Router>
   );
 }
