@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import redis from './redis'
 const startsWith = (str:string, word:string) => {
   return str.lastIndexOf(word, 0) === 0;
 }
@@ -26,6 +26,13 @@ class MutualFunds{
   }
   async getCurrentPrice(symbol : string){
     try{
+      const cache = await redis.clientGet(symbol + "." + "MUTUALFUNDS")
+      if(cache){
+        return {
+          symbol ,
+          currentPrice : cache
+        }
+      }
       const response = await axios.request({
         method: 'GET',
         url: `${this.baseUrl}/${symbol}`,
@@ -34,7 +41,7 @@ class MutualFunds{
         }
       })
       const {data} = response
-
+      redis.clientSet(symbol + "." + "MUTUALFUNDS",data.data[0].nav)
       return {
         symbol ,
         currentPrice : data.data[0].nav
