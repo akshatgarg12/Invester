@@ -1,5 +1,8 @@
 import axios from 'axios'
 import {config} from 'dotenv'
+import redis from './redis'
+import {asyncForEach} from '../constants'
+
 config()
 enum Market{
   NSE = "NSE",
@@ -22,56 +25,98 @@ class Stock{
   baseUrlNSE : string = "https://latest-stock-price.p.rapidapi.com/any"
 
   async getPriceFromNASDAQ({symbol, market} : StockInfoType){
-     // check the stock broker and call that api.
-     const url = `${this.baseUrlNASDAQ}/${symbol}`
-     try{
-       const response = await axios.request({
-         method: 'GET',
-         url,
-         headers: {
-           'x-rapidapi-key': process.env.RAPID_API_KEY,
-           'x-rapidapi-host': 'realstonks.p.rapidapi.com'
-         }
-       })
-       const {data} = response
-       const d = JSON.parse(data)
-       return {
-         symbol,
-         market,
-         currentPrice : d.price
-       }
-     }catch(e){
-       console.log(e)
-       throw e
-     }
+    try{
+      const cache = await redis.clientGet(symbol+"."+market)
+      if(cache){
+        return{
+          symbol,
+          market,
+          currentPrice : cache
+        }
+      }
+    }catch(e){
+      // console.log(e)
+    }
+    const url = `${this.baseUrlNASDAQ}/${symbol}`
+    try{
+      const response = await axios.request({
+        method: 'GET',
+        url,
+        headers: {
+          'x-rapidapi-key': process.env.RAPID_API_KEY,
+          'x-rapidapi-host': 'realstonks.p.rapidapi.com'
+        }
+      })
+      const {data} = response
+      const d = JSON.parse(data)
+
+      await redis.clientSet(symbol+"."+market, d.price)
+      return {
+        symbol,
+        market,
+        currentPrice : d.price
+      }
+  }
+    catch(e){
+    console.log(e)
+    throw e
+    }
   }
   async getPriceFromNSE(symbols:Array<StockInfoType>){
     const url = this.baseUrlNSE
      try{
-       const identifiers = symbols.map((s) => (s.symbol.toLocaleUpperCase() + "EQN")).join(',')
-       const response = await axios.request({
-         method: 'GET',
-         url,
-         headers: {
-          "x-rapidapi-key": process.env.RAPID_API_KEY,
-          "x-rapidapi-host": "latest-stock-price.p.rapidapi.com",
-          "useQueryString": true
-        },
-        // get the identifier first
-        params : {
-          "Identifier": identifiers
+       // check for cache
+       const cacheData:Array<any> = []
+       let identifiers:Array<any> = []
+       let prices:Array<any> = []
+       const callback = async (s:any) => {
+        try{
+          const cache = await redis.clientGet(s.symbol+"."+Market.NSE)
+          if(cache){
+            cacheData.push({
+              symbol : s.symbol,
+              market : Market.NSE,
+              currentPrice: cache
+            })
+          }else{
+            identifiers.push(s.symbol.toLocaleUpperCase() + "EQN")
+          }
+        }catch(e){
+          // console.log(e)
+          identifiers.push(s.symbol.toLocaleUpperCase() + "EQN")
         }
-       })
-       const {data} = response
-      //  const d = JSON.parse(data)
-       return data.map((s:any) => {
-         const {symbol , lastPrice } = s;
+       } 
+       await asyncForEach(symbols,callback)
+       prices = [...prices, ...cacheData]
+       if(identifiers.length){
+        const ids = identifiers.join(',')
+        console.log(ids)
+        const response = await axios.request({
+          method: 'GET',
+          url,
+          headers: {
+           "x-rapidapi-key": process.env.RAPID_API_KEY,
+           "x-rapidapi-host": "latest-stock-price.p.rapidapi.com",
+           "useQueryString": true
+         },
+         params : {
+           "Identifier": ids
+         }
+        })
+        const {data} = response
+        const priceData = data.map((s:any) => {
+          const {symbol , lastPrice } = s;
+          // set the cache 
+          redis.clientSet(symbol + "." + Market.NSE, lastPrice)
           return {
             symbol,
             market : Market.NSE,
             currentPrice : lastPrice
           }
-       })
+        })
+        prices = [...prices, ...priceData]
+       }
+       return prices
      }catch(e){
        console.log(e)
        throw e
