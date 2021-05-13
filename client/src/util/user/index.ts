@@ -4,19 +4,19 @@ import {asyncForEach} from '../custom'
 
 // current user get from context api
 export class User{
-  email : string
-  constructor(email : string){
-    this.email = email
+  uid : string
+  constructor(uid : string){
+    this.uid = uid
   }
   async getData(){
     try{
-      if(!this.email){
-        throw new Error("Provide an email")
+      if(!this.uid){
+        throw new Error("Provide an ID")
       }
       const portfolios:Array<PortfolioCardProps> = []
-      const db = await database.collection('/users').where("email","==", this.email).get();
-      const user = db.docs[0].data()
-      const userPortfolios =  user.portfolios
+      const db = await database.collection('users').doc(this.uid).get();
+      const user = db.data()
+      const userPortfolios =  user ? user.portfolios : []
   
       await asyncForEach(userPortfolios, async (portfolio:any, index:number) => {
        const snap = await portfolio.get()

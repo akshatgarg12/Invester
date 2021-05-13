@@ -40,7 +40,7 @@ export class Portfolio{
       throw e
     }
   }
-  async create(email:string, name:string){
+  async create(uid:string, name:string){
     try{
       const portfolio:any = {
         name,
@@ -51,8 +51,7 @@ export class Portfolio{
       }
       const document = await database.collection("portfolios").add(portfolio)
       // document.id
-      const userDocs = await database.collection('users').where("email", "==", email).get()
-      const user = userDocs.docs[0]
+      const user = await database.collection('users').doc(uid).get()
       user.ref.update({
         "portfolios" : firebase.firestore.FieldValue.arrayUnion(document)
       })
@@ -63,7 +62,7 @@ export class Portfolio{
       throw e
     }
   }
-  async delete(email : string){
+  async delete(uid : string){
     try{
       if(!this.id){
         console.log("provide an id")
@@ -75,8 +74,7 @@ export class Portfolio{
       // delete the doc
       await document.delete()
       // update the user data
-      const userDocs = await database.collection('users').where("email", "==", email).get()
-      const user = userDocs.docs[0]
+      const user = await database.collection('users').doc(uid).get()
       user.ref.update({
         "portfolios" :  firebase.firestore.FieldValue.arrayRemove(document)
       })

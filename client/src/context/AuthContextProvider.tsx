@@ -13,8 +13,8 @@ const AuthContextProvider: React.FC<any> = ({children}) => {
   useEffect(()=>{
     const callback = (u:any) => {
         if(u){
-          const {displayName, email, photoURL} = u
-          setUser({displayName, email, photoURL})
+          const {uid, displayName, email, photoURL} = u
+          setUser({uid, displayName, email, photoURL})
         }else{
           setUser(null)
         }
