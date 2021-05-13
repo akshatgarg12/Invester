@@ -16,12 +16,13 @@ const useStyles = makeStyles((theme: Theme) =>
       display:"flex",
       flexDirection:"column",
       justifyContent:"center",
-      textAlign:"center"
+      textAlign:"center",
+      height:"100%",
+      overflow:"hidden"
     },
     root: {
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
-        width: 200,
       },
     },
     submitBtn : {
