@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,12 +9,13 @@ import Box from '@material-ui/core/Box';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import MoneyIcon from '@material-ui/icons/Money';
+import AddCircleOutlined from '@material-ui/icons/AddCircleOutlined';
+import Button from '@material-ui/core/Button';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
 import { InvestmentType } from '../../util/investment';
 import { Container } from '@material-ui/core';
-import CustomDrawer from '../CustomDrawer';
-import AddInvestmentForm from '../Forms/AddInvestment';
+import AddInvestmentModal from '../Modals/AddInvestment';
 
 
 
@@ -65,20 +66,30 @@ export interface InvestmentData{
 const Investments: React.FC<any> = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
-
+  const [open, setOpen] = useState(false)
   return (
     <Container>
-    <CustomDrawer 
-      component = {<AddInvestmentForm />}
-    />
+      <AddInvestmentModal 
+        open = {open}
+        handleClose = {() => {setOpen(false)}}
+      />
+      
     <div className={classes.root}>    
+     <Button
+        variant="outlined"
+        color="primary"
+        onClick={()=>setOpen(true)}
+        startIcon={<AddCircleOutlined />}
+        >
+        Add an investment
+      </Button>
       <AppBar position="static" color="default">
         <Tabs
           value={value}
