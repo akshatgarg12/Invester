@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import TextField from '@material-ui/core/TextField';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Box, Button , Select, MenuItem} from '@material-ui/core';
+import { Button , Select, MenuItem, Container} from '@material-ui/core';
 import {InvestmentType, InvestmentDetails, Investment} from '../../util/investment'
 import { useParams } from 'react-router';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
@@ -11,23 +11,20 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     box:{
       width:"100%",
-      maxWidth:"400px",
-      margin:"auto",
-      display:"flex",
-      flexDirection:"column",
-      justifyContent:"center",
-      textAlign:"center",
+      maxWidth:"500px",
       height:"100%",
+      textAlign:"center",
+      margin:"auto",
       overflow:"hidden"
     },
     root: {
       '& .MuiTextField-root': {
-        margin: theme.spacing(1),
+        margin: "2px 10px",
       },
     },
     submitBtn : {
       width:"80%",
-      margin:"10px auto"
+      margin:"5px auto"
     }
   }),
 );
@@ -84,8 +81,9 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
       setLoading(false)
     }
   }
+
   return (
-    <Box className={classes.box}>
+    <Container className={classes.box}>
       <Select
             label="Type of investment"
             id="type-of-investment"
@@ -164,9 +162,8 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
           <Button type="submit" color="primary" variant="outlined" className={classes.submitBtn} disabled = {loading} >
             Add
           </Button>
-      </form>
-    
-    </Box>
+      </form>  
+    </Container>
   );
 }
  

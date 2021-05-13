@@ -6,6 +6,7 @@ import { User } from '../../util/user';
 import PortfolioContainer from '../PortfolioContainer';
 import Button from '@material-ui/core/Button'
 import AddPortfolioModal from '../Modals/AddPortfolio';
+import LoadingPage from './Loading';
 export interface DashboardProps {
   
 }
@@ -37,7 +38,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
   }, [user, dispatch])
   
 
-  if(loading) return <h4>Loading...</h4>
+  if(loading) return <LoadingPage />
 
   return (  
     <>
