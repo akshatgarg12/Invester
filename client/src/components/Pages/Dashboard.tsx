@@ -4,8 +4,8 @@ import { Container } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { User } from '../../util/user';
 import PortfolioContainer from '../PortfolioContainer';
-import { Portfolio } from '../../util/portfolio';
 import Button from '@material-ui/core/Button'
+import AddPortfolioModal from '../Modals/AddPortfolio';
 export interface DashboardProps {
   
 }
@@ -13,7 +13,8 @@ export interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = () => {
   const {user} = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
-  const portfolio = new Portfolio(undefined)
+  const [open, setOpen] = useState(false)
+
   const {dispatch}  = useUser()
   useEffect(() => {
     if(!user) return
@@ -34,16 +35,28 @@ const Dashboard: React.FC<DashboardProps> = () => {
     }
     callData()
   }, [user, dispatch])
+  
+
   if(loading) return <h4>Loading...</h4>
 
   return (  
-    <Container>
-      <Button onClick = {()=>{
-        // testing the function
-        portfolio.create(user.uid, "test")
-      }}>Add</Button>
-      <PortfolioContainer  />
-    </Container>
+    <>
+      <AddPortfolioModal
+        open ={open}
+        handleClose={() => {setOpen(false)}}
+        loading= {false}
+      />
+      <Container>
+        <Button 
+        style={{marginTop:"10px"}}
+        variant="outlined"
+        color="primary"
+        onClick = {()=>{
+          setOpen(true)
+        }}>Add a portfolio</Button>
+        <PortfolioContainer  />
+      </Container>
+    </>
   );
 }
  

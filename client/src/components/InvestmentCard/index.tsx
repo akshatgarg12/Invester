@@ -74,7 +74,9 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         const deleteId = await investment.delete(id,portfolioId,type)
         if(deleteId){
           const updatedData = await updatePortfolioData(type, initialData,deleteId, "DELETE")
-          dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
+          if(updatedData){
+            dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
+          }
         }
       }
     }catch(e){
