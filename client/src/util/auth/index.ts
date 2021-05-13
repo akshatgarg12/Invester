@@ -13,15 +13,15 @@ export class Auth{
     auth
     .signInWithPopup(provider)
     .then((result) => {
-      database.collection("users").where("email", "==", result.user?.email).get().then(data => {
-        // console.log(data.size)
-        if(data.size){
+      database.collection("users").doc(result.user?.uid).get().then(data => {
+        console.log(data)
+        if(data.exists){
           console.log("user exists in db")
         }
         else{
           if(result.user){
-            const {displayName, email, photoURL} = result.user
-            this.register({displayName, email, photoURL})
+            const {uid,displayName, email, photoURL} = result.user
+            this.register({uid,displayName, email, photoURL})
           }
         }
       }).then(()=> callback())
@@ -31,8 +31,8 @@ export class Auth{
         throw error
       })
   }
-  register({displayName, email,photoURL}:any){
-    database.collection("users").add({
+  register({uid,displayName, email,photoURL}:any){
+    database.collection("users").doc(uid).set({
       name : displayName,
       email : email,
       displayPic : photoURL,
@@ -48,6 +48,7 @@ export class Auth{
   }
   currentUser(callback :(u:any)=>void){
     auth.onAuthStateChanged((u) => {
+      // console.log(u)
       callback(u)
     })
   }

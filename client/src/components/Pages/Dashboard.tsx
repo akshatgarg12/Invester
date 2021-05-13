@@ -19,7 +19,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
     if(!user) return
     const callData = async () => {
       try{
-        const currentUser = new User(user.email)
+        const currentUser = new User(user.uid)
         setLoading(true)
         const d = await currentUser.getData()
         dispatch({type : UserDataReducerActions.SET, payload : d})
@@ -40,7 +40,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
     <Container>
       <Button onClick = {()=>{
         // testing the function
-        portfolio.create(user.email, "test")
+        portfolio.create(user.uid, "test")
       }}>Add</Button>
       <PortfolioContainer  />
     </Container>
