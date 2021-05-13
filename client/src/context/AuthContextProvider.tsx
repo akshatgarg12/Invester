@@ -1,4 +1,5 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
+import LoadingPage from '../components/Pages/Loading'
 import { Auth } from '../util/auth'
 // import {auth} from '../config/firebase'
 
@@ -26,7 +27,7 @@ const AuthContextProvider: React.FC<any> = ({children}) => {
   },[auth])
 
   if(loading){
-    return <h6>loading...</h6>
+    return <LoadingPage />
   }
   return (
     <AuthContext.Provider value={{user}}>

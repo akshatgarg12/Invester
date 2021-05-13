@@ -3,7 +3,7 @@ import { asyncForEach } from '../constants'
 import redis from './redis'
 const findWithAttr = (array:Array<string>,value:any) => {
   for(var i = 0; i < array.length; i += 1) {
-      if(array[i] === value.symbol) {
+      if(array[i].toUpperCase() === value.symbol.toUpperCase()) {
           return i;
       }
   }
@@ -94,10 +94,11 @@ class Crypto {
       }
     }
     let finalData:Array<any> = [...cachedData, ...newData]
-    console.log(finalData)
-    return finalData.sort(function(a, b){  
+    finalData.sort(function(a, b){  
       return findWithAttr(symbols, a) - findWithAttr(symbols, b)
     });
+    console.log(finalData)
+    return finalData
   }
 }
 
