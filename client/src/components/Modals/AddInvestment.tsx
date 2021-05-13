@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
       overflowY:"scroll",
-      margin:"auto"
+      margin:"auto",
     },
     paper: {
       backgroundColor: theme.palette.background.paper,

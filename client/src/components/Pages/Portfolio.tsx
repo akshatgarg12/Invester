@@ -4,6 +4,7 @@ import { useHistory } from 'react-router'
 import { usePortfolio , PortfolioReducerAction} from '../../context/PortfolioContextProvider';
 import { getPortfolioData } from '../../util/custom';
 import Investments from '../Investments';
+import LoadingPage from './Loading';
 
 
 export interface PortfolioPageProps{
@@ -39,7 +40,7 @@ export interface PortfolioPageProps{
   }, [id, dispatch, history])
 
   if(loading || !data){
-    return <h4>Loading Data...</h4>
+    return <LoadingPage />
   }  
   return (
     <div>
