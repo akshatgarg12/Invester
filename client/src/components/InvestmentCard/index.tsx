@@ -50,7 +50,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
   },
   center:{
-    textAlign:"center"
+    width:"100%",
+    background : "skyblue",
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"center",
   },
   expandOpen: {
     transform: 'rotate(180deg)',
@@ -183,10 +187,10 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit className={classes.center}>
-        <Button variant="outlined" 
+        <Button variant="text" 
           startIcon={<StorefrontTwoToneIcon />}
         >{market}</Button>
-        <Button variant="outlined" 
+        <Button variant="text" 
           startIcon={<LocalMallTwoToneIcon />}
           >{shop}</Button>
       </Collapse>

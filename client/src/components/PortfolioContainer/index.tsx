@@ -3,6 +3,8 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import PortfolioCard, {PortfolioCardProps} from '../PortfolioCard';
 import { useUser } from '../../context/UserContextProvider';
+import { Typography } from '@material-ui/core';
+import Hero from '../Hero';
 
 
 
@@ -18,6 +20,10 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop:"20px",
       paddingBottom:"20px",
       minHeight:"90vh"
+    },
+    center:{
+      margin:"20px auto",
+      textAlign:"center"
     }
   }),
 );
@@ -26,7 +32,7 @@ const PortfolioContainer: React.FC<any> = () => {
   const {data : portfolios} = useUser()
   return (
       <Grid container justify="center" spacing={3} className={classes.root}>
-        {portfolios && portfolios.map((portfolio:PortfolioCardProps) => (
+        {portfolios && portfolios.length ? portfolios.map((portfolio:PortfolioCardProps) => (
           <Grid key={portfolio.index} item>
             <PortfolioCard
               id = {portfolio.id}
@@ -37,7 +43,13 @@ const PortfolioContainer: React.FC<any> = () => {
               totalValue = {portfolio.totalValue}
             />
           </Grid>
-        ))}
+        )) : 
+        <div className={classes.center}>
+          <Hero />
+          <Typography component="h1">Start By Creating a Portfolio!</Typography>
+        </div>
+        }
+        
       </Grid>
   );
 }

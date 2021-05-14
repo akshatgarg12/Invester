@@ -166,16 +166,36 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
             value = {data.units}
             required
           />
-          <TextField
-            id="market"
-            label="market"
-            helperText="market eg : NSE, NASDAQ"
-            name="market"
-            type="string"
-            onChange={handleChange}
-            value = {data.market}
-            required
-            />
+          { 
+          type !== InvestmentType.STOCKS ?
+            <TextField
+              id="market"
+              label="market"
+              helperText="Exchange"
+              name="market"
+              type="string"
+              onChange={handleChange}
+              value = {data.market}
+              required
+            /> : 
+            <TextField
+              id="market"
+              label="market"
+              helperText="market eg : NSE, NASDAQ"
+              name="market"
+              type="string"
+              select
+              onChange={handleChange}
+              value = {data.market}
+              required
+            >
+              {["NSE", "NASDAQ"].map((option:string) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+            </TextField>
+            }
           <TextField
             id="shop"
             label="shop"
