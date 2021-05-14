@@ -1,10 +1,15 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import Button from '@material-ui/core/Button';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { Box, IconButton } from '@material-ui/core';
+import { Box, Collapse, IconButton } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import StorefrontTwoToneIcon from '@material-ui/icons/StorefrontTwoTone';
+import LocalMallTwoToneIcon from '@material-ui/icons/LocalMallTwoTone';
 import { RenderCardInfo } from '../PortfolioCard';
 import { DeleteOutline } from '@material-ui/icons';
 import { Investment, InvestmentType } from '../../util/investment';
@@ -24,15 +29,31 @@ export interface InvestmentCardProps {
   currentPrice : number
   units : number
   type : InvestmentType,
-  currency ?: Currency 
+  currency ?: Currency,
+  market : string,
+  shop : string 
 }
  
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
   root: {
-    maxWidth : "300px",
+    maxWidth : "350px",
     width :"100%",
     borderRadius:"20px",
     margin : "5px"
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  center:{
+    textAlign:"center"
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
   },
   bullet: {
     display: 'inline-block',
@@ -57,13 +78,18 @@ const useStyles = makeStyles({
   gain : {
     color:"green"
   }
-});
+}));
 
-const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units, type, currency}) => {
+const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units, type, currency, market, shop}) => {
   const {id:portfolioId}:any = useParams()
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
   const handleOpen = () => {
     setOpen(true);
   };
@@ -139,13 +165,32 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         />
       </CardContent>
       <CardActions>
-        <IconButton onClick = {()=>{
-          handleOpen()
-        }}>
-          {/* investment.delete(id,portfolioId,type) */}
-          <DeleteOutline />
+          <IconButton onClick = {()=>{
+            handleOpen()
+          }}>
+            {/* investment.delete(id,portfolioId,type) */}
+            <DeleteOutline />
+          </IconButton>
+          <IconButton
+            className={clsx(classes.expand, {
+              [classes.expandOpen]: expanded,
+            })}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+          <ExpandMoreIcon />
         </IconButton>
       </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit className={classes.center}>
+        <Button variant="outlined" 
+          startIcon={<StorefrontTwoToneIcon />}
+        >{market}</Button>
+        <Button variant="outlined" 
+          startIcon={<LocalMallTwoToneIcon />}
+          >{shop}</Button>
+      </Collapse>
+      
     </Card>
     </>
   );
