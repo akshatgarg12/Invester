@@ -22,12 +22,7 @@ export interface InvestmentDetails{
   currency ?: Currency
 }
 export class Investment{
-  currency : Currency
-  rate : number
-  constructor(currency : Currency, rate: number){
-    this.currency = currency
-    this.rate = rate
-  }
+  
   async get(ids:Array<string>, investmentType:InvestmentType){
     try{
       if(ids.length === 0) return []
@@ -53,10 +48,6 @@ export class Investment{
         const updatedData = await getCurrentPrice(symbols, investmentType)
         investmentData = investmentData.map((d:any, i:number) => {
           let currentPrice = updatedData[i].currentPrice
-          if(d.currency !== this.currency){
-            currentPrice = currentPrice * this.rate
-            d.averageBuyPrice = d.averageBuyPrice* this.rate
-          }
           return ({...d, currentPrice, id:ids[i]})
         })
         // console.log(investmentData)

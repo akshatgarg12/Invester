@@ -13,6 +13,7 @@ import ConfirmDeleteModal from '../Modals/ConfirmDelete';
 import { updatePortfolioData } from '../../util/custom';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 import { useCurrency } from '../../context/CurrencyContextProvider';
+import { Currency } from '../../util/currency';
 
 
 export interface InvestmentCardProps {
@@ -22,7 +23,8 @@ export interface InvestmentCardProps {
   averageBuyPrice : number
   currentPrice : number
   units : number
-  type : InvestmentType 
+  type : InvestmentType,
+  currency ?: Currency 
 }
  
 const useStyles = makeStyles({
@@ -57,7 +59,7 @@ const useStyles = makeStyles({
   }
 });
 
-const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units, type}) => {
+const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units, type, currency}) => {
   const {id:portfolioId}:any = useParams()
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -66,16 +68,23 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
     setOpen(true);
   };
 
-  const {currency, rate} = useCurrency()
+  const {currency: globalCurrency, rate} = useCurrency()
+
+  let abp:number = averageBuyPrice
+  let cp:number = currentPrice
+  if(globalCurrency !== currency){
+    abp = abp*rate
+    cp  = cp*rate
+  }
   const {data:initialData, dispatch} = usePortfolio()
-  const investment = new Investment(currency, rate)
+  const investment = new Investment()
   const handleClose = async (response : "CONFIRM" | "CANCEL") => {
     try{
       setLoading(true)
       if(response === "CONFIRM"){
         const deleteId = await investment.delete(id,portfolioId,type)
         if(deleteId){
-          const updatedData = await updatePortfolioData(type, initialData,deleteId, "DELETE",currency, rate)
+          const updatedData = await updatePortfolioData(type, initialData,deleteId, "DELETE")
           if(updatedData){
             dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
           }
@@ -114,11 +123,11 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         </Typography>
         <RenderCardInfo 
           title = "average buy price"
-          value = {(1*averageBuyPrice).toFixed(2)}
+          value = {(1*abp).toFixed(2)}
         />
         <RenderCardInfo 
           title = "current price"
-          value = {(1*currentPrice).toFixed(2)}
+          value = {(1*cp).toFixed(2)}
         />
         <RenderCardInfo 
           title = "units"
@@ -126,7 +135,7 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         />
          <RenderCardInfo 
           title = "investment value"
-          value = {(units * averageBuyPrice).toFixed(2)}
+          value = {(units * abp).toFixed(2)}
         />
       </CardContent>
       <CardActions>

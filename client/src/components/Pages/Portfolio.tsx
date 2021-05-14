@@ -1,7 +1,6 @@
 import React from 'react';
 import {useEffect, useState} from 'react'
 import { useHistory } from 'react-router'
-import { useCurrency } from '../../context/CurrencyContextProvider';
 import { usePortfolio , PortfolioReducerAction} from '../../context/PortfolioContextProvider';
 import { getPortfolioData } from '../../util/custom';
 import Investments from '../Investments';
@@ -21,14 +20,13 @@ export interface PortfolioPageProps{
   const id = props?.match?.params?.id
   const history = useHistory() 
   const {data, dispatch} = usePortfolio();
-  const {currency, rate} = useCurrency()
   const [loading, setLoading] = useState<boolean>(false) 
   useEffect(()=> {
     // create a function to take index and email of user and return the portfolio info.
     const callData = async  () => {
       try{
        setLoading(true)
-       const d:any = await getPortfolioData(id, currency, rate)
+       const d:any = await getPortfolioData(id)
        dispatch({type : PortfolioReducerAction.SET, payload : d})
       }
       catch(e){
