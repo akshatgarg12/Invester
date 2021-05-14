@@ -6,6 +6,7 @@ import {InvestmentType, InvestmentDetails, Investment} from '../../util/investme
 import { useParams } from 'react-router';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 import { updatePortfolioData } from '../../util/custom';
+import { useCurrency } from '../../context/CurrencyContextProvider';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,6 +50,7 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
   const [data, setData] = useState<InvestmentDetails>(initialData)
   const [type, setType] = useState<InvestmentType>(InvestmentType.STOCKS)
   const {data:collection, dispatch} = usePortfolio()
+  const {currency, rate} = useCurrency()
   const handleChange = (event: React.ChangeEvent<any>) => {
     if(event.target.name === "type"){
       setType(event.target.value)
@@ -62,7 +64,7 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
   };
   const handleClose = () => setOpen(false)
   const handleOpen = () => setOpen(true)
-  const investment = new Investment()
+  const investment = new Investment(currency, rate)
   const submitHandler = async (e:any) => {
     e.preventDefault()
     console.log(data, type)
@@ -70,7 +72,7 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
       setLoading(true)
       const id:string|undefined = await investment.create(data, type,portfolioId)
       if(id){
-        const updatedData = await updatePortfolioData(type, collection, id, "ADD")
+        const updatedData = await updatePortfolioData(type, collection, id, "ADD", currency, rate)
         if(updatedData){
           dispatch({type:PortfolioReducerAction.SET, payload:updatedData})
         }

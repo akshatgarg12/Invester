@@ -33,9 +33,6 @@ app.set("trust proxy", 1);
 
 app.use('/', API)
 
-import currency from '../src/helpers/currency'
-currency.rate("INR", "USD")
-
 app.listen(PORT, () => {
   console.log(`server running at port:${PORT}`)
 })

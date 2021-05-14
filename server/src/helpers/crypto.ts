@@ -29,7 +29,7 @@ class Crypto {
           }
         })
         data = response.data
-        redis.clientSet("CoinList" + "." + "CRYPTO", JSON.stringify(data))
+        await redis.clientSet("CoinList" + "." + "CRYPTO", JSON.stringify(data))
       }
     const coins = symbols.map((s) => data.find((c:any) => c.symbol.toLowerCase() === s.toLowerCase()))
     return coins
@@ -67,10 +67,11 @@ class Crypto {
       }
     }
     await asyncForEach(coins,callback)
+    try{
     if(idsArray.length){
-      const ids = idsArray.join(',')
-      const url = `${this.baseUrl}/simple/price?ids=${ids}&vs_currencies=inr,usd`
-      try{
+        const ids = idsArray.join(',')
+        const url = `${this.baseUrl}/simple/price?ids=${ids}&vs_currencies=inr,usd`
+    
         const response = await axios.request({
           method: 'GET',
           url,
@@ -79,27 +80,28 @@ class Crypto {
           }
         })
         const {data} = response
-        newData = remainingCoins.map((c, index) => {
+        const fn = async (c:any) => {
           if(data[c.id].inr){
             redis.clientSet(c.id + "." + "CRYPTO", data[c.id].inr);
-            return {
+            newData.push({
               symbol : c.symbol,
               currentPrice : data[c.id]?.inr
-           } 
-          }    
-      })    
-      }catch(e){
-        console.log(e)
-        throw e
+            })
+          }   
+        }
+        await asyncForEach(remainingCoins, fn)  
       }
+      let finalData:Array<any> = [...cachedData, ...newData]
+      finalData.sort(function(a, b){  
+        return findWithAttr(symbols, a) - findWithAttr(symbols, b)
+      });
+      console.log(finalData)
+      return finalData
+    }catch(e){
+      console.log(e)
+      throw e
     }
-    let finalData:Array<any> = [...cachedData, ...newData]
-    finalData.sort(function(a, b){  
-      return findWithAttr(symbols, a) - findWithAttr(symbols, b)
-    });
-    console.log(finalData)
-    return finalData
-  }
+   }
 }
 
 const crypto = new Crypto()

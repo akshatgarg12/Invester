@@ -104,16 +104,19 @@ class Stock{
          }
         })
         const {data} = response
-        const priceData = data.map((s:any) => {
+        let priceData : Array<any> = []
+        const fn = async (s:any) => {
           const {symbol , lastPrice } = s;
           // set the cache 
-          redis.clientSet(symbol + "." + Market.NSE, lastPrice)
-          return {
+          await redis.clientSet(symbol + "." + Market.NSE, lastPrice)
+          priceData.push({
             symbol,
             market : Market.NSE,
             currentPrice : lastPrice
-          }
-        })
+          })
+        }
+        await asyncForEach(data, fn) 
+      
         prices = [...prices, ...priceData]
        }
        return prices
