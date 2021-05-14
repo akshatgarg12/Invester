@@ -4,3 +4,4 @@ export const SERVER_URL = process.env.NODE_ENV === "development" ? SERVER_DEV_UR
 export const getCurrentStocksPriceURL = SERVER_URL + '/stocks'
 export const getCurrentCryptoPriceURL = SERVER_URL + '/crypto'
 export const getCurrentMutualFundPriceURL = SERVER_URL + '/mutualFunds'
+export const getCurrencyRatesURL = SERVER_URL + '/currency'

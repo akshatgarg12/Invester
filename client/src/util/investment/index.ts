@@ -3,6 +3,8 @@ import {database} from '../../config/firebase'
 import {getCurrentPrice} from '../current'
 import {InvestmentData} from '../../components/Investments'
 import firebase from 'firebase/app'
+import { Currency } from '../currency'
+
 
 export enum InvestmentType{
   STOCKS = "stocks",
@@ -17,8 +19,15 @@ export interface InvestmentDetails{
   units : number
   market ?: string 
   shop ?: string
+  currency ?: Currency
 }
 export class Investment{
+  currency : Currency
+  rate : number
+  constructor(currency : Currency, rate: number){
+    this.currency = currency
+    this.rate = rate
+  }
   async get(ids:Array<string>, investmentType:InvestmentType){
     try{
       if(ids.length === 0) return []
@@ -42,7 +51,14 @@ export class Investment{
         symbols = investmentData.map((i:any) => i.symbol)
       }
         const updatedData = await getCurrentPrice(symbols, investmentType)
-        investmentData = investmentData.map((d:any, i:number) => ({...d, currentPrice : updatedData[i].currentPrice, id:ids[i]}))
+        investmentData = investmentData.map((d:any, i:number) => {
+          let currentPrice = updatedData[i].currentPrice
+          if(d.currency !== this.currency){
+            currentPrice = currentPrice * this.rate
+            d.averageBuyPrice = d.averageBuyPrice* this.rate
+          }
+          return ({...d, currentPrice, id:ids[i]})
+        })
         // console.log(investmentData)
         return investmentData
       
@@ -53,10 +69,11 @@ export class Investment{
   }
   async getAll(stocks:Array<string>, cryptoCurrencies:Array<string>, mutualFunds:Array<string>){
     try{
-      const s = this.get(stocks, InvestmentType.STOCKS)
+      const s = this.get(stocks, InvestmentType.STOCKS,)
       const c = this.get(cryptoCurrencies, InvestmentType.CRYPTO)
       const m = this.get(mutualFunds, InvestmentType.MUTUALFUNDS)
       const d = await Promise.all([s,c,m])
+
       const x:InvestmentData = {
         stocks : d[0].reverse(),
         cryptoCurrencies : d[1].reverse(),

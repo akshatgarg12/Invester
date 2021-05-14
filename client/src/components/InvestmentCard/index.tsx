@@ -12,6 +12,7 @@ import { useParams } from 'react-router';
 import ConfirmDeleteModal from '../Modals/ConfirmDelete';
 import { updatePortfolioData } from '../../util/custom';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
+import { useCurrency } from '../../context/CurrencyContextProvider';
 
 
 export interface InvestmentCardProps {
@@ -64,16 +65,17 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
   const handleOpen = () => {
     setOpen(true);
   };
-  
+
+  const {currency, rate} = useCurrency()
   const {data:initialData, dispatch} = usePortfolio()
-  const investment = new Investment()
+  const investment = new Investment(currency, rate)
   const handleClose = async (response : "CONFIRM" | "CANCEL") => {
     try{
       setLoading(true)
       if(response === "CONFIRM"){
         const deleteId = await investment.delete(id,portfolioId,type)
         if(deleteId){
-          const updatedData = await updatePortfolioData(type, initialData,deleteId, "DELETE")
+          const updatedData = await updatePortfolioData(type, initialData,deleteId, "DELETE",currency, rate)
           if(updatedData){
             dispatch({type:PortfolioReducerAction.SET, payload: updatedData})
           }
@@ -112,11 +114,11 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
         </Typography>
         <RenderCardInfo 
           title = "average buy price"
-          value = {averageBuyPrice}
+          value = {(1*averageBuyPrice).toFixed(2)}
         />
         <RenderCardInfo 
           title = "current price"
-          value = {currentPrice}
+          value = {(1*currentPrice).toFixed(2)}
         />
         <RenderCardInfo 
           title = "units"

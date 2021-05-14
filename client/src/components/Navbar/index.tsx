@@ -13,6 +13,8 @@ import React from 'react';
 import {Auth} from '../../util/auth'
 import { useHistory } from 'react-router-dom'
 import {useAuth} from '../../context/AuthContextProvider'
+import { useCurrency } from '../../context/CurrencyContextProvider';
+import { Currency } from '../../util/currency';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -51,6 +53,8 @@ const Navbar: React.FC<NavbarProps> = () => {
   const classes = useStyles();
   const history = useHistory();
   const {user} = useAuth();
+  const {currency,changeCurrency} = useCurrency()
+  const option : Currency = currency === Currency.INR ? Currency.USD : Currency.INR
   const auth = new Auth()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -61,7 +65,10 @@ const Navbar: React.FC<NavbarProps> = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleCurrencyChange = () => {
+    changeCurrency(option)
+    handleClose()
+  }
   const redirectToDashboard:()=>void = () => history.push('/')
 
   if(!user) return null
@@ -107,7 +114,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                   {user.photoURL && <Avatar className={classes.userProfile} src={user.photoURL} alt="user-profile" />}
                   <Typography variant="h6">{user.displayName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
+                <MenuItem onClick={handleCurrencyChange}>show in {option}</MenuItem>
                 <MenuItem onClick={auth.logout}>Logout</MenuItem>
               </Menu>
             </div>
