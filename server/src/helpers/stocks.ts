@@ -12,9 +12,9 @@ interface StockInfoType{
   symbol : string,
   market : Market
 }
-const findWithAttr = (array:Array<StockInfoType>,value:any) => {
-  for(var i = 0; i < array.length; i += 1) {
-      if(array[i]["symbol"] === value.symbol && array[i]["market"] === value.market) {
+const findWithAttr = (array:StockInfoType[],value:any) => {
+  for(let i = 0; i < array.length; i += 1) {
+      if(array[i].symbol === value.symbol && array[i].market === value.market) {
           return i;
       }
   }
@@ -62,13 +62,13 @@ class Stock{
     throw e
     }
   }
-  async getPriceFromNSE(symbols:Array<StockInfoType>){
+  async getPriceFromNSE(symbols:StockInfoType[]){
     const url = this.baseUrlNSE
      try{
        // check for cache
-       const cacheData:Array<any> = []
-       let identifiers:Array<any> = []
-       let prices:Array<any> = []
+       const cacheData:any[] = []
+       const identifiers:any[] = []
+       let prices:any[] = []
        const callback = async (s:any) => {
         try{
           const cache = await redis.clientGet(s.symbol+"."+Market.NSE)
@@ -85,7 +85,7 @@ class Stock{
           // console.log(e)
           identifiers.push(s.symbol.toLocaleUpperCase() + "EQN")
         }
-       } 
+       }
        await asyncForEach(symbols,callback)
        prices = [...prices, ...cacheData]
        if(identifiers.length){
@@ -104,10 +104,10 @@ class Stock{
          }
         })
         const {data} = response
-        let priceData : Array<any> = []
+        const priceData : any[] = []
         const fn = async (s:any) => {
           const {symbol , lastPrice } = s;
-          // set the cache 
+          // set the cache
           await redis.clientSet(symbol + "." + Market.NSE, lastPrice)
           priceData.push({
             symbol,
@@ -115,8 +115,8 @@ class Stock{
             currentPrice : lastPrice
           })
         }
-        await asyncForEach(data, fn) 
-      
+        await asyncForEach(data, fn)
+
         prices = [...prices, ...priceData]
        }
        return prices
@@ -125,10 +125,10 @@ class Stock{
        throw e
      }
   }
-  
-  async getCurrentPrices(symbols:Array<StockInfoType>){
+
+  async getCurrentPrices(symbols:StockInfoType[]){
     console.log(symbols)
-    let apiCalls:Array<Promise<any>> = []
+    let apiCalls:Promise<any>[] = []
     const NASDAQstocks = symbols.filter((s) => s.market === Market.NASDAQ)
     const NSEstocks = symbols.filter((s) => s.market === Market.NSE)
     if(NASDAQstocks.length){
@@ -139,11 +139,11 @@ class Stock{
     }
     try{
       const data = await Promise.all(apiCalls)
-      let NASDAQprices = data.slice(0,NASDAQstocks.length)
-      let NSEprices = data.slice(NASDAQstocks.length)[0]
+      const NASDAQprices = data.slice(0,NASDAQstocks.length)
+      const NSEprices = data.slice(NASDAQstocks.length)[0]
       const prices =  [...NSEprices, ...NASDAQprices]
       console.log(prices)
-      return prices.sort(function(a, b){  
+      return prices.sort(function(a, b){
         return findWithAttr(symbols, a) - findWithAttr(symbols, b)
       });
     }catch(e){

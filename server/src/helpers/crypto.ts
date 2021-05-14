@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { asyncForEach } from '../constants'
 import redis from './redis'
-const findWithAttr = (array:Array<string>,value:any) => {
-  for(var i = 0; i < array.length; i += 1) {
+const findWithAttr = (array:string[],value:any) => {
+  for(let i = 0; i < array.length; i += 1) {
       if(array[i].toUpperCase() === value.symbol.toUpperCase()) {
           return i;
       }
@@ -17,7 +17,7 @@ class Crypto {
     const url = this.coinListUrl
     try{
     const cache:any = await redis.clientGet("CoinList" + "." + "CRYPTO")
-    let data:Array<any> = []
+    let data:any[] = []
     if(cache){
       data = JSON.parse(cache)
     }else{
@@ -43,10 +43,10 @@ class Crypto {
   async getCurrentPrices(symbols : string[]){
     console.log(symbols)
     const coins = await this.getCoinsBySymbol(symbols)
-    const idsArray:Array<string> = []
-    let cachedData:Array<any> = []
-    let newData:Array<any> = []
-    const remainingCoins :Array<any> = []
+    const idsArray:string[] = []
+    const cachedData:any[] = []
+    const newData:any[] = []
+    const remainingCoins :any[] = []
     const callback = async (c:any) => {
       try{
         const cache = await redis.clientGet(c.id + "." + "CRYPTO")
@@ -72,7 +72,7 @@ class Crypto {
     if(idsArray.length){
         const ids = idsArray.join(',')
         const url = `${this.baseUrl}/simple/price?ids=${ids}&vs_currencies=inr,usd`
-    
+
         const response = await axios.request({
           method: 'GET',
           url,
@@ -88,12 +88,12 @@ class Crypto {
               symbol : c.symbol,
               currentPrice : data[c.id]?.inr
             })
-          }   
+          }
         }
-        await asyncForEach(remainingCoins, fn)  
+        await asyncForEach(remainingCoins, fn)
       }
-      let finalData:Array<any> = [...cachedData, ...newData]
-      finalData.sort(function(a, b){  
+      const finalData:any[] = [...cachedData, ...newData]
+      finalData.sort(function(a, b){
         return findWithAttr(symbols, a) - findWithAttr(symbols, b)
       });
       console.log(finalData)
