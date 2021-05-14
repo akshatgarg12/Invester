@@ -93,8 +93,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
         if(updatedData){
           dispatch({type : UserDataReducerActions.SET, payload: updatedData})
         }
-        console.log(deleteId)
-     
+        // console.log(deleteId)
       }
     }catch(e){
       console.log(e)

@@ -16,7 +16,8 @@ class Currency {
       const response = await axios.get(url)
       const {data} = response
       const {rates} = data
-      await redis.clientSet("Rates.Currency", JSON.stringify(rates), 3*60*60)
+      const fiveHoursInSecs =  5*60*60
+      await redis.clientSet("Rates.Currency", JSON.stringify(rates), fiveHoursInSecs)
       return (rates[to]/rates[from])
     }
     catch(e){

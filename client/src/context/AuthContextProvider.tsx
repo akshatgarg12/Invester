@@ -18,7 +18,6 @@ const AuthContextProvider: React.FC<any> = ({children}) => {
         }else{
           setUser(null)
         }
-        console.log(u);
         setLoading(false)
       }
       auth.currentUser(callback)  

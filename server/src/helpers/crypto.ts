@@ -29,7 +29,8 @@ class Crypto {
           }
         })
         data = response.data
-        await redis.clientSet("CoinList" + "." + "CRYPTO", JSON.stringify(data))
+        const eightHoursInSecs = 18*60*60
+        await redis.clientSet("CoinList" + "." + "CRYPTO", JSON.stringify(data),eightHoursInSecs )
       }
     const coins = symbols.map((s) => data.find((c:any) => c.symbol.toLowerCase() === s.toLowerCase()))
     return coins

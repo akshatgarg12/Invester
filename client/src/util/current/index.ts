@@ -12,15 +12,21 @@ export const InvestmentURLs = {
 
 export const getCurrentPrice = async (symbols:Array<any>, type : InvestmentType) => {
   const url = InvestmentURLs[type]
-  const response = await axios(url, {
-    method:"POST",
-    data : {symbols},
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  });
-  console.log(response.data)
-  return response.data;
+  try{
+    const response = await axios(url, {
+      method:"POST",
+      data : {symbols},
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    // console.log(response.data)
+    return response.data;  
+  }catch(e){
+    console.log(e.message)
+    return []
+  }
+  
  
 }

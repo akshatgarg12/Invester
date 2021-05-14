@@ -47,7 +47,7 @@ export class Investment{
       }
         const updatedData = await getCurrentPrice(symbols, investmentType)
         investmentData = investmentData.map((d:any, i:number) => {
-          let currentPrice = updatedData[i].currentPrice
+          let currentPrice = updatedData[i]?.currentPrice
           return ({...d, currentPrice, id:ids[i]})
         })
         // console.log(investmentData)
@@ -81,11 +81,10 @@ export class Investment{
     try{
       const document = database.collection(investmentType).doc(id)
       await document.delete()
-      console.log(document)
-      const portfolioUpdate = await database.collection('portfolios').doc(portfolioId).update({
+      // console.log(document)
+      await database.collection('portfolios').doc(portfolioId).update({
         [investmentType] : firebase.firestore.FieldValue.arrayRemove(document)
       })
-      console.log(portfolioUpdate)
       return document.id
     }catch(e){
       console.log(e)
@@ -94,12 +93,10 @@ export class Investment{
   async create(details:InvestmentDetails, investmentType:InvestmentType, portfolioId:string){
     try{
       const document = await database.collection(investmentType).add(details)
-      console.log(document)
-      // document.id
-      const portfolioUpdate = await database.collection('portfolios').doc(portfolioId).update({
+      // console.log(document)
+      await database.collection('portfolios').doc(portfolioId).update({
         [investmentType] : firebase.firestore.FieldValue.arrayUnion(document)
       })
-      console.log(portfolioUpdate)
       return document.id
     }catch(e){
       console.log(e)

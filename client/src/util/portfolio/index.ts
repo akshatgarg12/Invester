@@ -24,7 +24,7 @@ export class Portfolio{
       const cryptoCurrencies: Array<string> = portfolio.cryptoCurrencies.map((s:any) => s.id)
       const mutualFunds: Array<string> = portfolio.mutualFunds.map((s:any) => s.id)
     
-      console.log(portfolio)
+      // console.log(portfolio)
       const {name, createdAt, totalValue} = portfolio
       return {
         name,
