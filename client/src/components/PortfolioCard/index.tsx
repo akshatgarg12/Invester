@@ -87,7 +87,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
     try{
       setLoading(true)
       if(response === "CONFIRM"){
-        const deleteId = await portfolio.delete(user.uid)
+        await portfolio.delete(user.uid)
         const updatedData = await userObj.getData()
         console.log(updatedData);
         if(updatedData){
