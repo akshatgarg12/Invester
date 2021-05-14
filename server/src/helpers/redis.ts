@@ -13,9 +13,12 @@ class Redis{
     });
   }
 
-  clientSet(key:string, value:string){
+  clientSet(key:string, value:string, timeInMins ?:number)
+  {
+    let time = threeMinsInSecs
+    if(timeInMins) time = timeInMins
     return new Promise((resolve,reject)=>{
-     RedisClient.setex(key, threeMinsInSecs, value, (err, reply) => {
+     RedisClient.setex(key, time, value, (err, reply) => {
        if(err) reject(err)
        else resolve(reply)
      });
