@@ -3,7 +3,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 // heroku config
 // const REDIS_PORT:any = process.env.REDIS_URL || 6379;
-
 const __prod__ = process.env.NODE_ENV === "production"
 // redis cloud service config
 const REDIS_PORT:any = __prod__ && process.env.REDIS_PORT
