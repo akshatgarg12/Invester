@@ -16,7 +16,7 @@ export class Auth{
       database.collection("users").doc(result.user?.uid).get().then(data => {
         console.log(data)
         if(data.exists){
-          console.log("user exists in db")
+          console.log("user signed in!")
         }
         else{
           if(result.user){
@@ -38,7 +38,7 @@ export class Auth{
       displayPic : photoURL,
       portfolios: []
     }).then((doc) => {
-      console.log(doc)
+      console.log("user registered!")
     })
   }
   logout(){
