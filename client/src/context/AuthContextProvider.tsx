@@ -1,7 +1,6 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 import LoadingPage from '../components/Pages/Loading'
 import { Auth } from '../util/auth'
-// import {auth} from '../config/firebase'
 
 const AuthContext: React.Context<any> = createContext(null)
 
@@ -21,7 +20,6 @@ const AuthContextProvider: React.FC<any> = ({children}) => {
         }
         console.log(u);
         setLoading(false)
-        // console.log(user)
       }
       auth.currentUser(callback)  
   },[auth])

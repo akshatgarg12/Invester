@@ -1,14 +1,10 @@
-import AuthContextProvider from './context/AuthContextProvider'
-
 import {BrowserRouter as Router,Switch,Route} from 'react-router-dom'
-
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthPage from './components/Pages/Auth';
 import Dashboard from './components/Pages/Dashboard';
 import Navbar from './components/Navbar';
 import PortfolioPage from './components/Pages/Portfolio';
-import PortfolioContextProvider from './context/PortfolioContextProvider';
-import UserContextProvider from './context/UserContextProvider';
+
 import Providers from './context';
 
 function App(){

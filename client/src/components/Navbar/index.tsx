@@ -7,6 +7,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 import Menu from '@material-ui/core/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 import React from 'react';
 
 
@@ -86,6 +87,13 @@ const Navbar: React.FC<NavbarProps> = () => {
          
           <div>
               {/* <Button>Portfolio</Button> */}
+              <Button
+                variant="text"
+                color="inherit"
+                startIcon={currency === Currency.INR ? "₹" : "$"}
+                >
+                {currency}
+              </Button>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"

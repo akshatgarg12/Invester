@@ -11,11 +11,11 @@ const Providers: React.FC<ProvidersProps> = ({children}) => {
   return (
     <AuthContextProvider>
       <UserContextProvider>
-        <CurrencyContextProvider>
           <PortfolioContextProvider>
-            {children}
+            <CurrencyContextProvider>
+                {children}
+            </CurrencyContextProvider>
           </PortfolioContextProvider>
-        </CurrencyContextProvider>
       </UserContextProvider>
     </AuthContextProvider>
   );

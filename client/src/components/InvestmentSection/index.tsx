@@ -27,7 +27,7 @@ const InvestmentSection: React.FC<InvestmentSectionProps> = ({type}) => {
        <Grid container justify="center" spacing={1} className={classes.root}>
        {
         data[type].map((s:InvestmentCardProps, index : number) => {
-          const {id, name, symbol, averageBuyPrice, currentPrice, units} = s
+          const {id, name, symbol, averageBuyPrice, currentPrice, units, currency} = s
           return (
               <InvestmentCard
                 id = {id}
@@ -38,6 +38,7 @@ const InvestmentSection: React.FC<InvestmentSectionProps> = ({type}) => {
                 currentPrice={currentPrice}
                 units={units}
                 type = {type}
+                currency ={currency}
               />
           )
         })
