@@ -19,7 +19,7 @@ export interface InvestmentDetails{
   units : number
   market ?: string 
   shop ?: string
-  currency ?: Currency
+  currency : Currency
 }
 export class Investment{
   

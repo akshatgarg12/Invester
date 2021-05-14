@@ -6,7 +6,8 @@ import {InvestmentType, InvestmentDetails, Investment} from '../../util/investme
 import { useParams } from 'react-router';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 import { updatePortfolioData } from '../../util/custom';
-// import { Currency } from '../../context/CurrencyContextProvider';
+import { Currency } from '../../util/currency';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       '& .MuiTextField-root': {
         margin: "2px 10px",
+        minWidth: "40%"
       },
     },
     submitBtn : {
@@ -45,11 +47,24 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
     averageBuyPrice : 0,
     units : 0,
     market : "",
-    shop : ""
+    shop : "",
+    currency : Currency.INR
 }
   const [data, setData] = useState<InvestmentDetails>(initialData)
   const [type, setType] = useState<InvestmentType>(InvestmentType.STOCKS)
   const {data:collection, dispatch} = usePortfolio()
+
+  const currencies = [
+    {
+      value : Currency.INR,
+      symbol : "₹"
+    },
+    {
+      value : Currency.USD,
+      symbol : "$"
+    }
+  ]
+
   const handleChange = (event: React.ChangeEvent<any>) => {
     if(event.target.name === "type"){
       setType(event.target.value)
@@ -103,7 +118,6 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
           <TextField
             id="name-of-investment"
             label="name"
-            helperText="name of investment"
             name="name"
             type="string"
             onChange={handleChange}
@@ -113,7 +127,6 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
           <TextField
             id="symbol-of-investment"
             label="symbol"
-            helperText="symbol of investment"
             name="symbol"
             type="string"
             onChange={handleChange}
@@ -121,9 +134,23 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
             required
           />
           <TextField
+            id="standard-select-currency"
+            select
+            label="currency"
+            value={data.currency}
+            name = "currency"
+            onChange={handleChange}
+            required
+          >
+           {currencies.map((option:any) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.symbol}
+              </MenuItem>
+            ))}
+        </TextField>
+          <TextField
             id="averageBuyPrice-of-investment"
             label="average buy price"
-            helperText="Average Buy Price"
             name="averageBuyPrice"
             type="number"
             onChange={handleChange}
@@ -133,7 +160,6 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
           <TextField
             id="units"
             label="units"
-            helperText="no of units bought"
             name="units"
             type="number"
             onChange={handleChange}
