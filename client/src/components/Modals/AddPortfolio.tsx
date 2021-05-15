@@ -50,7 +50,9 @@ const AddPortfolioModal : React.FC<any>= ({loading, open, handleClose}:AddPortfo
       >
         <Fade in={open}>
           <div className={classes.paper}>
-           <AddPortfolioForm />
+           <AddPortfolioForm 
+            closeModal = {handleClose}
+           />
            {/* close directly */}
            <Button variant="outlined" className={classes.btn} onClick={handleClose}>Close</Button>
           </div>

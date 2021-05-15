@@ -33,10 +33,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface AddInvestmentFormProps {
-  
+  closeModal :  () => any
 }
  
-const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
+const AddInvestmentForm: React.FC<AddInvestmentFormProps> = ({closeModal}) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -95,6 +95,7 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = () => {
       console.log(e)
     }finally{
       setLoading(false)
+      closeModal()
     }
   }
 
