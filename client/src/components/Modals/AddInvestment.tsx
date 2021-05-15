@@ -50,7 +50,9 @@ const AddInvestmentModal : React.FC<any>= ({open, handleClose}:AddInvestmentModa
       >
         <Fade in={open}>
           <div className={classes.paper}>
-           <AddInvestmentForm />
+           <AddInvestmentForm
+            closeModal = {handleClose}
+           />
            {/* close directly */}
            <Button variant="outlined" className={classes.btn} onClick={handleClose}>Close</Button>
           </div>

@@ -32,10 +32,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface AddPortfolioFormProps {
-  
+  closeModal : () => any
 }
  
-const AddPortfolioForm: React.FC<AddPortfolioFormProps> = () => {
+const AddPortfolioForm: React.FC<AddPortfolioFormProps> = ({closeModal}) => {
   const classes = useStyles();
   const {dispatch} = useUser()
   const {user} = useAuth()
@@ -61,6 +61,7 @@ const AddPortfolioForm: React.FC<AddPortfolioFormProps> = () => {
       console.log(e)
     }finally{
       setLoading(false)
+      closeModal()
     }
   }
   return (
