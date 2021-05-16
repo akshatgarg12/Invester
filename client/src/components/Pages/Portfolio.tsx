@@ -8,9 +8,8 @@ import LoadingPage from './Loading';
 
 
 export interface PortfolioPageProps{
-    name: any;
+    name: string;
     createdAt: any;
-    totalValue: any;
     stocks: string[];
     cryptoCurrencies: string[];
     mutualFunds: string[];

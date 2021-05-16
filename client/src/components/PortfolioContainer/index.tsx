@@ -35,6 +35,7 @@ const PortfolioContainer: React.FC<any> = () => {
         {portfolios && portfolios.length ? portfolios.map((portfolio:PortfolioCardProps) => (
           <Grid key={portfolio.index} item>
             <PortfolioCard
+              key = {portfolio.id}
               id = {portfolio.id}
               index = {portfolio.index}
               name = {portfolio.name}

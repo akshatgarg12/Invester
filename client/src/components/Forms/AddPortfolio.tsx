@@ -5,7 +5,7 @@ import { Box, Button} from '@material-ui/core';
 import { Portfolio } from '../../util/portfolio';
 import { useAuth } from '../../context/AuthContextProvider';
 import { UserDataReducerActions, useUser } from '../../context/UserContextProvider';
-import { User } from '../../util/user';
+import { updateUserData } from '../../util/custom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +37,7 @@ export interface AddPortfolioFormProps {
  
 const AddPortfolioForm: React.FC<AddPortfolioFormProps> = ({closeModal}) => {
   const classes = useStyles();
-  const {dispatch} = useUser()
+  const {data:initialData,dispatch} = useUser()
   const {user} = useAuth()
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState<string>("")
@@ -45,18 +45,15 @@ const AddPortfolioForm: React.FC<AddPortfolioFormProps> = ({closeModal}) => {
     setName(event.target.value)
   };
   const portfolio = new Portfolio(undefined)
-  const userObj = new User(user.uid)
   const submitHandler = async (e:any) => {
     e.preventDefault()
     try{
       setLoading(true)
       const id = await portfolio.create(user.uid,name)
-      console.log(id);
-      const updatedData = await userObj.getData()
-      if(updatedData){
-        dispatch({type : UserDataReducerActions.SET, payload : updatedData})
+      if(id){
+        const updatedData = await updateUserData(initialData, id, "ADD")
+        dispatch({type : UserDataReducerActions.SET, payload :updatedData})
       }
-
     }catch(e){ 
       console.log(e)
     }finally{
