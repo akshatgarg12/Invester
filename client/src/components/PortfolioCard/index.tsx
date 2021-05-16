@@ -15,8 +15,8 @@ import { Portfolio } from '../../util/portfolio';
 import { useAuth } from '../../context/AuthContextProvider';
 import ConfirmDeleteModal from '../Modals/ConfirmDelete';
 import {useState} from 'react'
-import { User } from '../../util/user';
 import { UserDataReducerActions, useUser } from '../../context/UserContextProvider';
+import { updateUserData } from '../../util/custom';
 export interface PortfolioCardProps {
   id : string
   index : number
@@ -73,9 +73,8 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const {user} = useAuth()
-  const {dispatch} = useUser()
+  const {data:initialData,dispatch} = useUser()
   const portfolio = new Portfolio(id)
-  const userObj = new User(user.uid)
 
   const redirectToPortfolioPage = () => {
     history.push(`/portfolio/${id}`)
@@ -87,10 +86,9 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({id, index, name, createdAt
     try{
       setLoading(true)
       if(response === "CONFIRM"){
-        await portfolio.delete(user.uid)
-        const updatedData = await userObj.getData()
-        console.log(updatedData);
-        if(updatedData){
+        const id = await portfolio.delete(user.uid)
+        if(id){
+          const updatedData = await updateUserData(initialData,id,"DELETE")
           dispatch({type : UserDataReducerActions.SET, payload: updatedData})
         }
         // console.log(deleteId)

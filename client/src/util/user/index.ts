@@ -21,12 +21,11 @@ export class User{
       await asyncForEach(userPortfolios, async (portfolio:any, index:number) => {
        const snap = await portfolio.get()
        const data = snap.data()
-       const {name, totalValue, createdAt} = data
+       const {name, createdAt} = data
        const p: PortfolioCardProps = {
          id : portfolio.id,
          index,
          name,
-         totalValue,
          createdAt : new Date(createdAt.seconds*1000).toLocaleDateString(),
          investment : {
            crypto:data.cryptoCurrencies.length,

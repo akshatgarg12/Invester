@@ -25,11 +25,10 @@ export class Portfolio{
       const mutualFunds: Array<string> = portfolio.mutualFunds.map((s:any) => s.id)
     
       // console.log(portfolio)
-      const {name, createdAt, totalValue} = portfolio
+      const {name, createdAt} = portfolio
       return {
         name,
         createdAt, 
-        totalValue,
         stocks,
         cryptoCurrencies,
         mutualFunds
@@ -52,11 +51,10 @@ export class Portfolio{
       const document = await database.collection("portfolios").add(portfolio)
       // document.id
       const user = await database.collection('users').doc(uid).get()
-      user.ref.update({
+      await user.ref.update({
         "portfolios" : firebase.firestore.FieldValue.arrayUnion(document)
       })
-   
-      return document.id
+     return document.id
     }catch(e){
       console.log(e)
       throw e

@@ -44,3 +44,29 @@ export const updatePortfolioData = async (toUpdateType : InvestmentType, initial
     throw e
   }
 }
+
+export const updateUserData = async (initialData : any, id : string, action : "ADD" | "DELETE") => {
+  if(action === "ADD"){
+    const portfolio = new Portfolio(id)
+    const d:PortfolioPageProps = await portfolio.get()
+    const p: any = {
+      id,
+      name : d.name,
+      createdAt : new Date(d.createdAt.seconds*1000).toLocaleDateString(),
+      investment : {
+        crypto:d.cryptoCurrencies.length,
+        stocks : d.stocks.length, 
+        mutualFunds: d.mutualFunds.length 
+      }
+    }
+    return [
+      ...initialData,
+       p
+    ]
+  }
+  if(action === "DELETE"){
+    const updatedData = initialData.filter((d:any) =>  d.id !== id)
+    return updatedData
+  }
+
+}
