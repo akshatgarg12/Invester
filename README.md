@@ -49,3 +49,4 @@ Manage all your investments at one place without any hassle.
 ```
 3. Deploy frontend on vercel, make sure their are no ts-lint warnings before deploying. 
 4. Add the deployed frontend link to firebase auth links, to make the authentication work.
+5. Create appropriate firestore rules to make the data secure.
