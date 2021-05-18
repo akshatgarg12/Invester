@@ -1,7 +1,6 @@
 import {useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
@@ -14,8 +13,11 @@ import Button from '@material-ui/core/Button';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
 import { InvestmentType } from '../../util/investment';
-import { Container } from '@material-ui/core';
+import { Container, Paper } from '@material-ui/core';
 import AddInvestmentModal from '../Modals/AddInvestment';
+import { usePortfolio } from '../../context/PortfolioContextProvider';
+import { useCurrency } from '../../context/CurrencyContextProvider';
+import { Currency } from '../../util/currency';
 
 
 
@@ -53,9 +55,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: "98%",
     maxWidth:"1024px",
     margin:"10px auto",
-    height : "90vh",
-    overflowY:"scroll"
   },
+  totalValueBox:{
+    textAlign:"center",
+    width:"98%",
+    maxWidth:"1024px",
+    margin:"10px auto",
+    background:"#F1F1F1",
+    padding:"20px 0",
+    borderRadius:"20px"
+  }
 }));
 
 export interface InvestmentData{
@@ -63,10 +72,30 @@ export interface InvestmentData{
   cryptoCurrencies : Array<InvestmentCardProps>
   mutualFunds : Array<InvestmentCardProps>
 }
+
+const getTotalValue = (data:InvestmentData, type : InvestmentType, globalCurrency:Currency, rate:number) => {
+  let ttl = 0;
+  data[type].forEach((s : InvestmentCardProps) => {
+    if(s.currency  === globalCurrency){
+        ttl += s.currentPrice * s.units;
+    }else{
+      ttl += s.currentPrice*rate * s.units;
+    }
+  })
+  return ttl;
+}
+
 const Investments: React.FC<any> = () => {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = useState(0);
+  const {data}:{data : InvestmentData} = usePortfolio()
+  const {currency, rate} = useCurrency()
+  let totalValue : number = 
+  getTotalValue(data, InvestmentType.STOCKS, currency, rate) + 
+  getTotalValue(data, InvestmentType.CRYPTO, currency, rate) + 
+  getTotalValue(data, InvestmentType.MUTUALFUNDS, currency, rate);
+  
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
@@ -80,7 +109,9 @@ const Investments: React.FC<any> = () => {
         open = {open}
         handleClose = {() => {setOpen(false)}}
       />
-      
+    <Box className={classes.totalValueBox}>
+     <Typography variant = "h5">Total Value : {totalValue.toFixed(2)}</Typography>
+    </Box>
     <div className={classes.root}>    
      <Button
         variant="outlined"
@@ -90,7 +121,7 @@ const Investments: React.FC<any> = () => {
         >
         Add an investment
       </Button>
-      <AppBar position="static" color="default">
+      <Paper color="default">
         <Tabs
           value={value}
           onChange={handleChange}
@@ -104,7 +135,7 @@ const Investments: React.FC<any> = () => {
         <Tab icon={<MonetizationOnIcon />} label="CRYPTO" />
         <Tab icon={<MoneyIcon />} label="MUTUAL FUNDS" />
         </Tabs>
-      </AppBar>
+      </Paper>
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={value}
