@@ -43,7 +43,7 @@ Manage all your investments at one place without any hassle.
   ```
 ## Deployment
 1. Make sure you have initialised a cloud hosted redis DB and pasted the credentials in server .env file.
-2. Create and initialise the project with heroku and deploy the server
+2. Create and initialise the project with heroku, add heroku as a remote and deploy the server
 ```shell
   git subtree push --prefix server heroku master
 ```
