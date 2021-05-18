@@ -10,6 +10,11 @@ export interface InvestmentSectionProps {
 }
 const useStyles = makeStyles((theme: Theme) =>
 createStyles({
+  container: {
+    height : "70vh",
+    overflowY:"scroll",
+    scrollbarWidth:"thin"
+  },
   root: {
     width:"100%",
     margin:"auto",
@@ -23,7 +28,7 @@ const InvestmentSection: React.FC<InvestmentSectionProps> = ({type}) => {
   return (
     // create a card component which will take values and will render here.
     <div>
-    <Container>
+    <Container className={classes.container}>
        <Grid container justify="center" spacing={1} className={classes.root}>
        {
         data[type].map((s:InvestmentCardProps, index : number) => {
