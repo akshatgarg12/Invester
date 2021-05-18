@@ -1,11 +1,8 @@
 import { useCurrency } from "../../context/CurrencyContextProvider";
 import { usePortfolio } from "../../context/PortfolioContextProvider";
-import { Currency } from "../../util/currency";
 import { InvestmentType } from "../../util/investment";
 import { InvestmentData } from "../Investments";
 import { InvestmentCardProps } from "../InvestmentCard";
-
-import Typography from '@material-ui/core/Typography'
 import { RenderCardInfo } from "../PortfolioCard";
 
 export interface InvestmentInfoProps {
