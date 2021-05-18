@@ -15,9 +15,7 @@ import InvestmentSection from '../InvestmentSection';
 import { InvestmentType } from '../../util/investment';
 import { Container, Paper } from '@material-ui/core';
 import AddInvestmentModal from '../Modals/AddInvestment';
-import { usePortfolio } from '../../context/PortfolioContextProvider';
-import { useCurrency } from '../../context/CurrencyContextProvider';
-import { Currency } from '../../util/currency';
+import InvestmentInfo from '../InvestmentInfo';
 
 
 
@@ -73,29 +71,13 @@ export interface InvestmentData{
   mutualFunds : Array<InvestmentCardProps>
 }
 
-const getTotalValue = (data:InvestmentData, type : InvestmentType, globalCurrency:Currency, rate:number) => {
-  let ttl = 0;
-  data[type].forEach((s : InvestmentCardProps) => {
-    if(s.currency  === globalCurrency){
-        ttl += s.currentPrice * s.units;
-    }else{
-      ttl += s.currentPrice*rate * s.units;
-    }
-  })
-  return ttl;
-}
+
 
 const Investments: React.FC<any> = () => {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = useState(0);
-  const {data}:{data : InvestmentData} = usePortfolio()
-  const {currency, rate} = useCurrency()
-  let totalValue : number = 
-  getTotalValue(data, InvestmentType.STOCKS, currency, rate) + 
-  getTotalValue(data, InvestmentType.CRYPTO, currency, rate) + 
-  getTotalValue(data, InvestmentType.MUTUALFUNDS, currency, rate);
-  
+ 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
@@ -103,15 +85,16 @@ const Investments: React.FC<any> = () => {
     setValue(index);
   };
   const [open, setOpen] = useState(false)
+
   return (
     <Container>
       <AddInvestmentModal 
         open = {open}
         handleClose = {() => {setOpen(false)}}
       />
-    <Box className={classes.totalValueBox}>
-     <Typography variant = "h5">Total Value : {totalValue.toFixed(2)}</Typography>
-    </Box>
+      <Box className={classes.totalValueBox}>
+        <InvestmentInfo />
+      </Box>
     <div className={classes.root}>    
      <Button
         variant="outlined"
