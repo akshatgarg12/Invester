@@ -14,8 +14,8 @@ class MutualFundController{
   }
   async find(req:Request, res:Response){
     try{
-      const {prefix} = req.body
-      const result = await MutualFunds.find(prefix)
+      const {q}:any = req.query
+      const result = await MutualFunds.find(q)
       res.send(result)
     }catch(e){
       console.log(e)

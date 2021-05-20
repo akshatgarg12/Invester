@@ -8,17 +8,16 @@ class MutualFunds{
   baseUrl: string = "https://api.mfapi.in/mf"
   async find(prefix : string) {
     try{
+      const url = `${this.baseUrl}/search?q=${prefix}`
       const response = await axios.request({
         method: 'GET',
-        url: this.baseUrl,
+        url: url,
         headers: {
           "accept" : "application/json"
         }
       })
       const {data} = response
-      console.log(data.length)
-      const x = data.filter((d:any) => startsWith(d.schemeName, prefix))
-      return x.slice(0,10)
+      return data
     }catch(e){
       console.log(e)
       throw e
