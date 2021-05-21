@@ -1,5 +1,4 @@
 import {useState} from 'react';
-import TextField from '@material-ui/core/TextField';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Button , Select, MenuItem, Container} from '@material-ui/core';
 import {InvestmentType, InvestmentDetails, Investment} from '../../util/investment'
@@ -7,6 +6,10 @@ import { useParams } from 'react-router';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 import { updatePortfolioData } from '../../util/custom';
 import { Currency } from '../../util/currency';
+import AddStockForm from './AddStock';
+import AddMutualFundForm from './AddMutualFund';
+import AddCryptoForm from './AddCrypto';
+import { currencies } from '../../constant';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -54,17 +57,6 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = ({closeModal}) => {
   const [type, setType] = useState<InvestmentType>(InvestmentType.STOCKS)
   const {data:collection, dispatch} = usePortfolio()
 
-  const currencies = [
-    {
-      value : Currency.INR,
-      symbol : "₹"
-    },
-    {
-      value : Currency.USD,
-      symbol : "$"
-    }
-  ]
-
   const handleChange = (event: React.ChangeEvent<any>) => {
     if(event.target.name === "type"){
       setType(event.target.value)
@@ -110,103 +102,36 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = ({closeModal}) => {
             value={type}
             name = "type"
             onChange={handleChange}
-          >
+      >
         <MenuItem value={InvestmentType.STOCKS}>Stocks</MenuItem>
         <MenuItem value={InvestmentType.CRYPTO}>Crypto Currency</MenuItem>
         <MenuItem value={InvestmentType.MUTUALFUNDS}>Mutual Funds</MenuItem>
       </Select>
       <form className={classes.root} noValidate={false} autoComplete="off" onSubmit={submitHandler}>  
-          <TextField
-            id="name-of-investment"
-            label="name"
-            name="name"
-            type="string"
-            onChange={handleChange}
-            value = {data.name}
-            required
-          />
-          <TextField
-            id="symbol-of-investment"
-            label="symbol"
-            name="symbol"
-            type="string"
-            onChange={handleChange}
-            value = {data.symbol}
-            required
-          />
-          <TextField
-            id="standard-select-currency"
-            select
-            label="currency"
-            value={data.currency}
-            name = "currency"
-            onChange={handleChange}
-            required
-          >
-           {currencies.map((option:any) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.symbol}
-              </MenuItem>
-            ))}
-        </TextField>
-          <TextField
-            id="averageBuyPrice-of-investment"
-            label="average buy price"
-            name="averageBuyPrice"
-            type="number"
-            onChange={handleChange}
-            value = {data.averageBuyPrice}
-            required
-          />
-          <TextField
-            id="units"
-            label="units"
-            name="units"
-            type="number"
-            onChange={handleChange}
-            value = {data.units}
-            required
-          />
-          { 
-          type !== InvestmentType.STOCKS ?
-            <TextField
-              id="market"
-              label="market"
-              helperText="Exchange"
-              name="market"
-              type="string"
-              onChange={handleChange}
-              value = {data.market}
-              required
-            /> : 
-            <TextField
-              id="market"
-              label="market"
-              helperText="market eg : NSE, NASDAQ"
-              name="market"
-              type="string"
-              select
-              onChange={handleChange}
-              value = {data.market}
-              required
-            >
-              {["NSE", "NASDAQ"].map((option:string) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-            </TextField>
-            }
-          <TextField
-            id="shop"
-            label="shop"
-            type="string"
-            helperText="broker name"
-            name="shop"
-            onChange={handleChange}
-            value = {data.shop}
-            required
-          />
+          {
+            type === InvestmentType.STOCKS && 
+            <AddStockForm
+              handleChange = {handleChange}
+              currencies = {currencies}
+              data = {data}
+            />
+          }
+          {
+            type === InvestmentType.MUTUALFUNDS && 
+            <AddMutualFundForm 
+              handleChange = {handleChange}
+              currencies = {currencies}
+              data = {data}
+            />
+          }
+          {
+            type === InvestmentType.CRYPTO &&
+             <AddCryptoForm
+              handleChange = {handleChange}
+              currencies = {currencies}
+              data = {data}
+             />
+          }
           <Button type="submit" color="primary" variant="outlined" className={classes.submitBtn} disabled = {loading} >
             Add
           </Button>
