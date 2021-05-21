@@ -1,27 +1,74 @@
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { InvestmentDetails } from '../../util/investment';
 import { Currency } from '../../util/currency';
-
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { SERVER_URL } from '../../constant';
 
 export interface AddMutualFundFormProps {
+    setData : (x: InvestmentDetails) => void,
     data : InvestmentDetails,
     currencies : Array<{value:Currency, symbol:string}>,
     handleChange : (event:any) => void
 }
  
-const AddMutualFundForm: React.FC<AddMutualFundFormProps> = ({data, currencies, handleChange}) => {
-
+interface MutualFundSuggestion{
+  schemeCode : number
+  schemeName : string
+}
+const AddMutualFundForm: React.FC<AddMutualFundFormProps> = ({setData, data, currencies, handleChange}) => {
+  const [suggestion, setSuggestion] = useState<Array<MutualFundSuggestion>>([])
+  const [chosen , setChosen] = useState<MutualFundSuggestion>({
+    schemeCode : 0,
+    schemeName : ""
+  })
+  const [search, setSearch] = useState<string>("")
+  const defaultProps = {
+    options: suggestion || [],
+    getOptionLabel: (option: MutualFundSuggestion) => option.schemeName,
+  };
+  useEffect(()=>{
+    const fn = async () => {
+      if(search.length >= 3){
+        const url = SERVER_URL + "/mutualFunds/search"
+        const response = await axios.get(url + `?q=${search}`)
+        if(response.data && response.data.length)
+          setSuggestion(response.data)
+      }
+    }
+    fn()
+  }, [search])
+  useEffect(()=>{
+    console.log(chosen)
+    setData({...data, name : chosen.schemeName, symbol : chosen.schemeCode.toString()})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chosen])
   return (
     <div>
-      <TextField
-        id="name-of-investment"
-        label="name"
-        name="name"
-        type="string"
-        onChange={handleChange}
-        value = {data.name}
-        required
+       <Autocomplete
+        {...defaultProps}
+        id="name"
+        debug
+        onChange ={(_,value) => {
+          setChosen(value || chosen)
+        }}
+        value = {chosen}
+        renderInput={(params:any) => 
+          <TextField
+            {...params}
+            id="name-of-investment"
+            label="name"
+            name="name"
+            type="string"
+            onChange={(e) =>{
+              setSearch(e.target.value)
+            }}
+            value = {search} 
+            required
+         />
+        }
       />
       <TextField
         id="symbol-of-investment"

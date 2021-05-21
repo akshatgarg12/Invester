@@ -27,6 +27,11 @@ const useStyles = makeStyles((theme: Theme) =>
         margin: "2px 10px",
         minWidth: "40%"
       },
+      '& .MuiAutocomplete-root': {
+        minWidth: "40%",
+        padding:"2px auto",
+        margin: "2px auto"
+      }
     },
     submitBtn : {
       width:"80%",
@@ -119,6 +124,7 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = ({closeModal}) => {
           {
             type === InvestmentType.MUTUALFUNDS && 
             <AddMutualFundForm 
+              setData = {setData}
               handleChange = {handleChange}
               currencies = {currencies}
               data = {data}
