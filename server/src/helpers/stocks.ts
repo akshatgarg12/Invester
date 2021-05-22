@@ -63,8 +63,8 @@ class Stock{
     throw e
     }
   }
-  async getPriceFromNSE(stocks:StockInfoType[]){
-    const symbols = stocks.map((s:StockInfoType) => s.symbol.toUpperCase())
+  async getPriceFromNSE(stks:StockInfoType[]){
+    const symbols = stks.map((s:StockInfoType) => s.symbol.toUpperCase())
     const url = this.baseUrlNSE
      try{
        // check for cache
@@ -87,7 +87,7 @@ class Stock{
         }
        }
 
-       await asyncForEach(stocks,callback)
+       await asyncForEach(stks,callback)
 
        prices = [...prices, ...cacheData]
 
@@ -109,7 +109,7 @@ class Stock{
           await redis.clientSet(symbol.toUpperCase() + "." + Market.NSE, lastPrice)
         }
        await asyncForEach(data, cacheFn)
-       
+
        const priceData : any[] = []
        const fn = async (symbol:any) => {
           const cache = await redis.clientGet(symbol+"."+Market.NSE)
