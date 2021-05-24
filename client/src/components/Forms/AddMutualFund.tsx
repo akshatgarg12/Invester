@@ -95,7 +95,7 @@ const AddMutualFundForm: React.FC<AddMutualFundFormProps> = ({setData, data, cur
         ))}
       </TextField>
       <TextField
-        inputProps={{ type:'number', step:"0000.1" }}
+        inputProps={{ type:'numeric' }}
         id="averageBuyPrice-of-investment"
         label="average buy price"
         name="averageBuyPrice"
@@ -104,7 +104,7 @@ const AddMutualFundForm: React.FC<AddMutualFundFormProps> = ({setData, data, cur
         required
       />
       <TextField
-        inputProps={{ type:'number', step:"0000.1" }}
+        inputProps={{ type:'numeric' }}
         id="units"
         label="units"
         name="units"
