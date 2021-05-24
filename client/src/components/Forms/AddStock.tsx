@@ -50,7 +50,7 @@ const AddStockForm: React.FC<AddStockFormProps> = ({data, currencies, handleChan
         label="average buy price"
         name="averageBuyPrice"
         type="number"
-        inputProps={{type : "numeric"}}
+        inputProps={{ type:'number', step:"0000.1" }}
         onChange={handleChange}
         value = {data.averageBuyPrice}
         required
@@ -60,7 +60,7 @@ const AddStockForm: React.FC<AddStockFormProps> = ({data, currencies, handleChan
         label="units"
         name="units"
         type="number"
-        inputProps={{type : "numeric"}}
+        inputProps={{ type:'number', step:"0000.1" }}
         onChange={handleChange}
         value = {data.units}
         required

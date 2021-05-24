@@ -11,7 +11,7 @@ class MutualFunds{
       const url = `${this.baseUrl}/search?q=${prefix}`
       const response = await axios.request({
         method: 'GET',
-        url: url,
+        url,
         headers: {
           "accept" : "application/json"
         }

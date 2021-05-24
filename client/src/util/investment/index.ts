@@ -47,7 +47,7 @@ export class Investment{
       }
         const updatedData = await getCurrentPrice(symbols, investmentType)
         investmentData = investmentData.map((d:any, i:number) => {
-          let currentPrice = updatedData[i]?.currentPrice
+          let currentPrice = Number(updatedData[i]?.currentPrice)
           return ({...d, currentPrice, id:ids[i]})
         })
         // console.log(investmentData)

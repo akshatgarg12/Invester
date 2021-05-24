@@ -2,6 +2,7 @@ import axios from 'axios'
 import {config} from 'dotenv'
 import redis from './redis'
 import {asyncForEach} from '../constants'
+import e from 'express'
 
 config()
 enum Market{
@@ -62,12 +63,13 @@ class Stock{
     throw e
     }
   }
-  async getPriceFromNSE(symbols:StockInfoType[]){
+  async getPriceFromNSE(stks:StockInfoType[]){
+    const symbols = stks.map((s:StockInfoType) => s.symbol.toUpperCase())
     const url = this.baseUrlNSE
      try{
        // check for cache
        const cacheData:any[] = []
-       const identifiers:any[] = []
+       let ctr = 0
        let prices:any[] = []
        const callback = async (s:any) => {
         try{
@@ -78,19 +80,18 @@ class Stock{
               market : Market.NSE,
               currentPrice: cache
             })
-          }else{
-            identifiers.push(s.symbol.toLocaleUpperCase() + "EQN")
-          }
+          }else ctr++;
         }catch(e){
-          // console.log(e)
-          identifiers.push(s.symbol.toLocaleUpperCase() + "EQN")
+          console.log(e)
+          ctr++
         }
        }
-       await asyncForEach(symbols,callback)
+
+       await asyncForEach(stks,callback)
+
        prices = [...prices, ...cacheData]
-       if(identifiers.length){
-        const ids = identifiers.join(',')
-        console.log(ids)
+
+       if(ctr){
         const response = await axios.request({
           method: 'GET',
           url,
@@ -99,24 +100,26 @@ class Stock{
            "x-rapidapi-host": "latest-stock-price.p.rapidapi.com",
            "useQueryString": true
          },
-         params : {
-           "Identifier": ids
-         }
         })
         const {data} = response
-        const priceData : any[] = []
-        const fn = async (s:any) => {
+        // console.log(data)
+        const cacheFn = async (s : any) => {
           const {symbol , lastPrice } = s;
           // set the cache
-          await redis.clientSet(symbol + "." + Market.NSE, lastPrice)
+          await redis.clientSet(symbol.toUpperCase() + "." + Market.NSE, lastPrice)
+        }
+       await asyncForEach(data, cacheFn)
+
+       const priceData : any[] = []
+       const fn = async (symbol:any) => {
+          const cache = await redis.clientGet(symbol+"."+Market.NSE)
           priceData.push({
             symbol,
             market : Market.NSE,
-            currentPrice : lastPrice
+            currentPrice : cache
           })
         }
-        await asyncForEach(data, fn)
-
+        await asyncForEach(symbols, fn)
         prices = [...prices, ...priceData]
        }
        return prices
