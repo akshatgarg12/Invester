@@ -99,6 +99,7 @@ const AddMutualFundForm: React.FC<AddMutualFundFormProps> = ({setData, data, cur
         label="average buy price"
         name="averageBuyPrice"
         type="number"
+        inputProps={{type : "numeric"}}
         onChange={handleChange}
         value = {data.averageBuyPrice}
         required
@@ -108,6 +109,7 @@ const AddMutualFundForm: React.FC<AddMutualFundFormProps> = ({setData, data, cur
         label="units"
         name="units"
         type="number"
+        inputProps={{type : "numeric"}}
         onChange={handleChange}
         value = {data.units}
         required

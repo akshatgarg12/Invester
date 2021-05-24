@@ -34,6 +34,7 @@ const AddCryptoForm: React.FC<AddCryptoFormProps> = ({setData, data, currencies,
       if(search.length >= 3){
         const url = SERVER_URL + "/crypto/search"
         const response = await axios.get(url + `?q=${search}`)
+        console.log(response.data)
         if(response.data && response.data.length)
           setSuggestion(response.data)
       }
@@ -101,6 +102,7 @@ const AddCryptoForm: React.FC<AddCryptoFormProps> = ({setData, data, currencies,
         label="average buy price"
         name="averageBuyPrice"
         type="number"
+        inputProps={{type : "numeric"}}
         onChange={handleChange}
         value = {data.averageBuyPrice}
         required
@@ -110,6 +112,7 @@ const AddCryptoForm: React.FC<AddCryptoFormProps> = ({setData, data, currencies,
         label="units"
         name="units"
         type="number"
+        inputProps={{type : "numeric"}}
         onChange={handleChange}
         value = {data.units}
         required
