@@ -133,6 +133,7 @@ const AddInvestmentForm: React.FC<AddInvestmentFormProps> = ({closeModal}) => {
           {
             type === InvestmentType.CRYPTO &&
              <AddCryptoForm
+              setData = {setData}
               handleChange = {handleChange}
               currencies = {currencies}
               data = {data}

@@ -1,28 +1,77 @@
 import TextField from '@material-ui/core/TextField'
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import {useState, useEffect} from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import { InvestmentDetails } from '../../util/investment';
 import { Currency } from '../../util/currency';
+import { SERVER_URL } from '../../constant';
+import axios from 'axios';
 
 
 export interface AddCryptoFormProps {
+    setData : (x: InvestmentDetails) => void,
     data : InvestmentDetails,
     currencies : Array<{value:Currency, symbol:string}>,
     handleChange : (event:any) => void
 }
- 
-const AddCryptoForm: React.FC<AddCryptoFormProps> = ({data, currencies, handleChange}) => {
+interface CryptoSuggestion{
+  symbol : number
+  name : string
+}
+const AddCryptoForm: React.FC<AddCryptoFormProps> = ({setData, data, currencies, handleChange}) => {
+  const [suggestion, setSuggestion] = useState<Array<CryptoSuggestion>>([])
+  const [chosen , setChosen] = useState<CryptoSuggestion>({
+    symbol : 0,
+    name : ""
+  })
+  const [search, setSearch] = useState<string>("")
+  const defaultProps = {
+    options: suggestion || [],
+    getOptionLabel: (option: CryptoSuggestion) => option.name,
+  };
+  useEffect(()=>{
+    const fn = async () => {
+      if(search.length >= 3){
+        const url = SERVER_URL + "/crypto/search"
+        const response = await axios.get(url + `?q=${search}`)
+        if(response.data && response.data.length)
+          setSuggestion(response.data)
+      }
+    }
+    fn()
+  }, [search])
+  useEffect(()=>{
+    console.log(chosen)
+    setData({...data, name : chosen.name, symbol : chosen.symbol.toString()})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chosen])
 
   return (
     <div>
-      <TextField
-        id="name-of-investment"
-        label="name"
-        name="name"
-        type="string"
-        onChange={handleChange}
-        value = {data.name}
-        required
+      <Autocomplete
+        {...defaultProps}
+        id="name"
+        debug
+        onChange ={(_,value) => {
+          setChosen(value || chosen)
+        }}
+        value = {chosen}
+        renderInput={(params:any) => 
+          <TextField
+            {...params}
+            id="name-of-investment"
+            label="name"
+            name="name"
+            type="string"
+            onChange={(e) =>{
+              setSearch(e.target.value)
+            }}
+            value = {search} 
+            required
+         />
+        }
       />
+     
       <TextField
         id="symbol-of-investment"
         label="symbol"
