@@ -102,7 +102,7 @@ const AddCryptoForm: React.FC<AddCryptoFormProps> = ({setData, data, currencies,
         label="average buy price"
         name="averageBuyPrice"
         type="number"
-        inputProps={{ type:'number', step:"0000.1" }}
+        inputProps={{ type:'numeric' }}
         onChange={handleChange}
         value = {data.averageBuyPrice}
         required
@@ -112,7 +112,7 @@ const AddCryptoForm: React.FC<AddCryptoFormProps> = ({setData, data, currencies,
         label="units"
         name="units"
         type="number"
-        inputProps={{ type:'number', step:"0000.1" }}
+        inputProps={{ type:'numeric'}}
         onChange={handleChange}
         value = {data.units}
         required
