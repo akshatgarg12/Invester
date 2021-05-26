@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: "98%",
     maxWidth:"1024px",
     margin:"10px auto",
+    marginBottom:"30px"
   },
   totalValueBox:{
     textAlign:"center",

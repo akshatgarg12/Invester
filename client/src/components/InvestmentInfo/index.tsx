@@ -83,6 +83,11 @@ const InvestmentInfo: React.FC<InvestmentInfoProps> = () => {
       change : Change({invested : mutualFundsInvestedValue, current : mutualFundsCurrentValue})
     }
   ]
+  // if no investment don't show this component
+  if(!data?.stocks?.length && !data?.cryptoCurrencies?.length && !data?.mutualFunds?.length){
+    return null;
+  } 
+
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -96,6 +101,7 @@ const InvestmentInfo: React.FC<InvestmentInfoProps> = () => {
         </TableHead>
         <TableBody>
           {rows.map((row) => {
+            if(isNaN(Number(row.change))) return null;
             const inProfit = Number(row.change) >= 0
             return  (
             <TableRow key={row.name}>
