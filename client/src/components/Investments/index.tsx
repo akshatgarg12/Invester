@@ -59,9 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width:"98%",
     maxWidth:"1024px",
     margin:"10px auto",
-    background:"#F1F1F1",
-    padding:"20px 0",
-    borderRadius:"20px"
+    padding:"20px 0"
   }
 }));
 
