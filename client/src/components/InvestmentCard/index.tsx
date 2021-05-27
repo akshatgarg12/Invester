@@ -11,7 +11,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StorefrontTwoToneIcon from '@material-ui/icons/StorefrontTwoTone';
 import LocalMallTwoToneIcon from '@material-ui/icons/LocalMallTwoTone';
 import { RenderCardInfo } from '../PortfolioCard';
-import { DeleteOutline } from '@material-ui/icons';
+import { DeleteOutline , CreateOutlined} from '@material-ui/icons';
 import { Investment, InvestmentType } from '../../util/investment';
 import { useParams } from 'react-router';
 import ConfirmDeleteModal from '../Modals/ConfirmDelete';
@@ -19,6 +19,7 @@ import { updatePortfolioData } from '../../util/custom';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 import { useCurrency } from '../../context/CurrencyContextProvider';
 import { Currency } from '../../util/currency';
+import UpdateInvestmentModal from '../Modals/UpdateInvestment';
 
 
 export interface InvestmentCardProps {
@@ -87,15 +88,21 @@ const useStyles = makeStyles((theme: Theme) =>
 const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averageBuyPrice, currentPrice, units, type, currency, market, shop}) => {
   const {id:portfolioId}:any = useParams()
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState({
+    updateModal : false,
+    deleteModal : false
+  });
   const [loading, setLoading] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpen = (type : "updateModal" | "deleteModal") => {
+    if(type === "updateModal"){
+      setOpen({updateModal : true, deleteModal : false});
+    }else
+      setOpen({updateModal : false, deleteModal : true});
   };
 
   const {currency: globalCurrency, rate} = useCurrency()
@@ -108,7 +115,8 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
   }
   const {data:initialData, dispatch} = usePortfolio()
   const investment = new Investment()
-  const handleClose = async (response : "CONFIRM" | "CANCEL") => {
+
+  const handleDeleteModalClose = async (response : "CONFIRM" | "CANCEL") => {
     try{
       setLoading(true)
       if(response === "CONFIRM"){
@@ -123,18 +131,26 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
     }catch(e){
       console.log(e)
     }finally{
-      setOpen(false);
+      setOpen({...open, deleteModal:false});
       setLoading(false)
     }
   };
+  const closeUpdateModal = () => setOpen({...open, updateModal : false})
+
   const changePercentage = ((currentPrice - averageBuyPrice)/averageBuyPrice)*100
   const changeClass:string = changePercentage > 0 ? classes.gain : classes.loss
   return (
     <>
     <ConfirmDeleteModal 
       loading = {loading}
-      open = {open}
-      handleClose = {handleClose}
+      open = {open.deleteModal}
+      handleClose = {handleDeleteModalClose}
+    />
+    <UpdateInvestmentModal 
+      loading = {loading}
+      open = {open.updateModal}
+      closeModal = {closeUpdateModal}
+      initialData = {{id, symbol, name, averageBuyPrice, currentPrice, units, type, currency, market, shop}}
     />
     <Card className={classes.root}>
       <CardContent>
@@ -170,10 +186,16 @@ const InvestmentCard: React.FC<InvestmentCardProps> = ({id, symbol, name, averag
       </CardContent>
       <CardActions>
           <IconButton onClick = {()=>{
-            handleOpen()
+            handleOpen("deleteModal")
           }}>
             {/* investment.delete(id,portfolioId,type) */}
             <DeleteOutline />
+          </IconButton>
+          <IconButton onClick = {()=>{
+            handleOpen("updateModal")
+          }}>
+            {/* investment.delete(id,portfolioId,type) */}
+            <CreateOutlined />
           </IconButton>
           <IconButton
             className={clsx(classes.expand, {

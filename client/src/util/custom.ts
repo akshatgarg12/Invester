@@ -23,7 +23,7 @@ export const getPortfolioData = async (id:string) => {
   }
 }
 
-export const updatePortfolioData = async (toUpdateType : InvestmentType, initialData: InvestmentData, updateId : string, action : "ADD" | "DELETE") => {
+export const updatePortfolioData = async (toUpdateType : InvestmentType, initialData: InvestmentData, updateId : string, action : "ADD" | "DELETE" | "UPDATE") => {
   try{
     if(action === "ADD"){
       const investment = new Investment()
@@ -34,6 +34,16 @@ export const updatePortfolioData = async (toUpdateType : InvestmentType, initial
     }
     if(action === "DELETE"){
       const updatedData = initialData[toUpdateType].filter((data) => data.id !== updateId)
+      return {
+        ...initialData,
+        [toUpdateType] : updatedData
+      }
+    }
+    if(action === "UPDATE"){
+      const investment = new Investment()
+      const x:any = await investment.get([updateId], toUpdateType)
+      const updatedData = initialData[toUpdateType].filter((data) => data.id !== updateId)
+      updatedData.unshift(x[0])
       return {
         ...initialData,
         [toUpdateType] : updatedData
