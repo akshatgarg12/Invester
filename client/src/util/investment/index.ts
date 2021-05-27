@@ -11,7 +11,10 @@ export enum InvestmentType{
   CRYPTO = "cryptoCurrencies",
   MUTUALFUNDS = "mutualFunds"
 }
-
+export interface UpdateInvestmentData{
+  averageBuyPrice : number
+  units : number
+}
 export interface InvestmentDetails{
   name : string
   symbol : string
@@ -102,7 +105,14 @@ export class Investment{
       console.log(e)
     }
   }
-  async update(){
-    console.log("update an investment")
+  async update(id : string,investmentType:InvestmentType,data:UpdateInvestmentData){
+    try{
+      await database.collection(investmentType).doc(id).update({
+        ...data
+      });
+      return id;
+    }catch(e){
+      console.log(e)
+    }
   }
 }
