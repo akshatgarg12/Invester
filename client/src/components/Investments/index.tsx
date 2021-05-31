@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import MoneyIcon from '@material-ui/icons/Money';
 import AddCircleOutlined from '@material-ui/icons/AddCircleOutlined';
 import Button from '@material-ui/core/Button';
@@ -16,6 +17,9 @@ import { InvestmentType } from '../../util/investment';
 import { Container, Paper } from '@material-ui/core';
 import AddInvestmentModal from '../Modals/AddInvestment';
 import InvestmentInfo from '../InvestmentInfo';
+import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
+import { getPortfolioData } from '../../util/custom';
+import LoadingPage from '../Pages/Loading';
 
 
 
@@ -70,21 +74,36 @@ export interface InvestmentData{
   mutualFunds : Array<InvestmentCardProps>
 }
 
+interface InvestmentsProps{
+  id : string
+}
 
-
-const Investments: React.FC<any> = () => {
+const Investments: React.FC<InvestmentsProps> = ({id}) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [open, setOpen] = useState(false)
   const [value, setValue] = useState(0);
- 
+  const [loading, setLoading] = useState<boolean>(false);
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
-  const [open, setOpen] = useState(false)
+  const {dispatch} = usePortfolio()
+  const refreshHandler = async () => {
+    try{
+      setLoading(true);
+      const portfolioData = await getPortfolioData(id);
+      dispatch({type:PortfolioReducerAction.SET, payload : portfolioData});
+    }catch(e){
+      console.log(e);
+    }finally{
+      setLoading(false);
+    }
+  }
 
+  if(loading) return <LoadingPage />
   return (
     <Container>
       <AddInvestmentModal 
@@ -94,7 +113,11 @@ const Investments: React.FC<any> = () => {
       <Box className={classes.totalValueBox}>
         <InvestmentInfo />
       </Box>
-    <div className={classes.root}>    
+    <div className={classes.root}>  
+    <Button 
+      startIcon={<RefreshIcon />}
+      onClick = {refreshHandler}
+    />  
      <Button
         variant="outlined"
         color="primary"
