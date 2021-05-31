@@ -43,7 +43,7 @@ export interface PortfolioPageProps{
   }  
   return (
     <div>
-     <Investments />
+     <Investments id={id} />
     </div>
   );
 }
