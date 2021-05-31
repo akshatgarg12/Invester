@@ -96,6 +96,7 @@ const InvestmentInfo: React.FC<InvestmentInfoProps> = () => {
             <TableCell>Values</TableCell>
             <TableCell align="right">Invested</TableCell>
             <TableCell align="right">Current</TableCell>
+            <TableCell align="right">Net</TableCell>
             <TableCell align="right">Change</TableCell>
           </TableRow>
         </TableHead>
@@ -110,6 +111,7 @@ const InvestmentInfo: React.FC<InvestmentInfoProps> = () => {
               </TableCell>
               <TableCell align="right">{row.invested}</TableCell>
               <TableCell align="right">{row.current}</TableCell>
+              <TableCell align="right">{(Number(row.current) - Number(row.invested)).toFixed(2)}</TableCell>
               <TableCell align="right" style={{color: inProfit ? "green" : "red"}}>{row.change}</TableCell>
             </TableRow>
             )
