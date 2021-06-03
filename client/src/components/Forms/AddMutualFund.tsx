@@ -41,7 +41,6 @@ const AddMutualFundForm: React.FC<AddMutualFundFormProps> = ({setData, data, cur
     fn()
   }, [search])
   useEffect(()=>{
-    console.log(chosen)
     setData({...data, name : chosen.schemeName, symbol : chosen.schemeCode.toString()})
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chosen])
