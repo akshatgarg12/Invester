@@ -34,7 +34,6 @@ const AddCryptoForm: React.FC<AddCryptoFormProps> = ({setData, data, currencies,
       if(search.length >= 3){
         const url = SERVER_URL + "/crypto/search"
         const response = await axios.get(url + `?q=${search}`)
-        console.log(response.data)
         if(response.data && response.data.length)
           setSuggestion(response.data)
       }
@@ -42,7 +41,6 @@ const AddCryptoForm: React.FC<AddCryptoFormProps> = ({setData, data, currencies,
     fn()
   }, [search])
   useEffect(()=>{
-    console.log(chosen)
     setData({...data, name : chosen.name, symbol : chosen.symbol.toString()})
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chosen])

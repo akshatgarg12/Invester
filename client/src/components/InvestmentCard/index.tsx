@@ -38,7 +38,7 @@ export interface InvestmentCardProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
   root: {
-    maxWidth : "350px",
+    maxWidth : "300px",
     width :"100%",
     borderRadius:"20px",
     margin : "5px"

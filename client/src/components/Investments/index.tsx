@@ -3,9 +3,9 @@ import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
+import AddIcon from '@material-ui/icons/Add';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import MoneyIcon from '@material-ui/icons/Money';
@@ -14,7 +14,7 @@ import Button from '@material-ui/core/Button';
 import { InvestmentCardProps } from '../InvestmentCard';
 import InvestmentSection from '../InvestmentSection';
 import { InvestmentType } from '../../util/investment';
-import { Container, Paper } from '@material-ui/core';
+import { Container, Fab, Paper } from '@material-ui/core';
 import AddInvestmentModal from '../Modals/AddInvestment';
 import InvestmentInfo from '../InvestmentInfo';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
@@ -43,8 +43,8 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box p={1}>
+          {children}
         </Box>
       )}
     </div>
@@ -65,6 +65,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth:"1024px",
     margin:"10px auto",
     padding:"20px 0"
+  },
+  floatingBtn:{
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+    zIndex:100
+  },
+  tabs:{
+    padding:0
   }
 }));
 
@@ -117,7 +126,12 @@ const Investments: React.FC<InvestmentsProps> = ({id}) => {
     <Button 
       startIcon={<RefreshIcon />}
       onClick = {refreshHandler}
-    />  
+    />
+    <div className = {classes.floatingBtn} onClick={()=>setOpen(true)}>
+      <Fab color="primary" size="small" aria-label="Add a new investment">
+          <AddIcon />
+      </Fab>
+    </div>
      <Button
         variant="outlined"
         color="primary"
@@ -145,6 +159,7 @@ const Investments: React.FC<InvestmentsProps> = ({id}) => {
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={value}
         onChangeIndex={handleChangeIndex}
+        className={classes.tabs}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
           <InvestmentSection 
