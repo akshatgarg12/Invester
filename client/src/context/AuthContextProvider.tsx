@@ -2,6 +2,7 @@ import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 import LoadingPage from '../components/Pages/Loading'
 import { Auth } from '../util/auth'
 
+/* Contains info about user auth: if logged in : some info */
 const AuthContext: React.Context<any> = createContext(null)
 
 export const useAuth = () => useContext(AuthContext)

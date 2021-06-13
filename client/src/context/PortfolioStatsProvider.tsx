@@ -1,11 +1,11 @@
-import {useContext, createContext, ReactNode, useRef, useEffect} from 'react'
+import {useContext, createContext, ReactNode, useEffect, useState} from 'react'
 import { InvestmentCardProps } from '../components/InvestmentCard'
 import { InvestmentData } from '../components/Investments'
 import { InvestmentType } from '../util/investment'
 import { useCurrency } from './CurrencyContextProvider'
 import { usePortfolio } from './PortfolioContextProvider'
 
-
+/* Contains info about the  portfolio : overall investments and values for graphs and table */
 const PortfolioStatsContext = createContext<any>(null)
 
 export const usePortfolioStats = () => useContext(PortfolioStatsContext)
@@ -17,9 +17,11 @@ export interface PortfolioStatsProviderProps {
 const PortfolioStatsProvider = ({children}:any) :JSX.Element => {
     const {data}:{data : InvestmentData} = usePortfolio()
     const {currency:globalCurrency, rate} = useCurrency()
-    const stats = useRef<any>()
+    const [stats, setStats] = useState<any>({})
+
     useEffect(()=>{
         const getTotalCurrentValue = (type : InvestmentType) => {
+            if(!data[type].length) return 0
             const total = data[type].map((s:InvestmentCardProps) => {
                 let value = s.currentPrice*s.units
                 if(s.currency !== globalCurrency) value *= rate
@@ -28,6 +30,7 @@ const PortfolioStatsProvider = ({children}:any) :JSX.Element => {
             return Number(total.toFixed(2))
         }
         const getTotalInvestedValue = (type : InvestmentType) => {
+            if(!data[type].length) return 0
             const total = data[type].map((s:InvestmentCardProps) => {
                 let value = s.averageBuyPrice*s.units
                 if(s.currency !== globalCurrency) value *= rate
@@ -35,6 +38,7 @@ const PortfolioStatsProvider = ({children}:any) :JSX.Element => {
             }).reduce((a, b) => a+b)
             return Number(total.toFixed(2))
         }
+        
         if(data){
             const stocksInvestedValue  = getTotalInvestedValue(InvestmentType.STOCKS)
             const stocksCurrentValue  = getTotalCurrentValue(InvestmentType.STOCKS)
@@ -42,10 +46,10 @@ const PortfolioStatsProvider = ({children}:any) :JSX.Element => {
             const cryptoCurrentValue  = getTotalCurrentValue(InvestmentType.CRYPTO)
             const mutualFundsInvestedValue  = getTotalInvestedValue(InvestmentType.MUTUALFUNDS)
             const mutualFundsCurrentValue  = getTotalCurrentValue(InvestmentType.MUTUALFUNDS)
-            const totalInvestedValue  = stocksInvestedValue + cryptoInvestedValue + mutualFundsInvestedValue
-            const totalCurrentValue  = stocksCurrentValue + cryptoCurrentValue + mutualFundsCurrentValue
+            const totalInvestedValue  = Number((stocksInvestedValue + cryptoInvestedValue + mutualFundsInvestedValue).toFixed(2))
+            const totalCurrentValue  = Number((stocksCurrentValue + cryptoCurrentValue + mutualFundsCurrentValue).toFixed(2))
             
-            stats.current = {
+            const state = {
                 overall : {
                     name : 'Total',
                     invested : totalInvestedValue,
@@ -71,6 +75,7 @@ const PortfolioStatsProvider = ({children}:any) :JSX.Element => {
                     change : Change({invested : mutualFundsInvestedValue, current : mutualFundsCurrentValue})
                 }
             }
+            setStats(state)
         }
     }, [data, globalCurrency, rate])
 
@@ -78,7 +83,7 @@ const PortfolioStatsProvider = ({children}:any) :JSX.Element => {
 
     return (
         <PortfolioStatsContext.Provider value={{
-            data : stats.current
+            data : stats
         }}>
             {children}
         </PortfolioStatsContext.Provider>

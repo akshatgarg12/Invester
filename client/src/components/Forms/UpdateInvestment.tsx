@@ -52,7 +52,6 @@ const UpdateInvestmentForm: React.FC<UpdateInvestmentFormProps> = ({closeModal, 
   const submitHandler = async (e:any) => {
     e.preventDefault()
     try{
-      console.log("called update")
       setLoading(true)
       const {id, type} = initialData
       const updatedDocId = await investment.update(id,type,formData);

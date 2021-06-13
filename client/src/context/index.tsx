@@ -4,11 +4,8 @@ import PortfolioContextProvider from "./PortfolioContextProvider";
 import PortfolioStatsProvider from "./PortfolioStatsProvider";
 import UserContextProvider from "./UserContextProvider";
 
-export interface ProvidersProps {
-  
-}
  
-const Providers: React.FC<ProvidersProps> = ({children}) => {
+const Providers = ({children}:any) => {
   return (
     <AuthContextProvider>
       <UserContextProvider>
