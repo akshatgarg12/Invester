@@ -1,10 +1,11 @@
 import { createContext, useContext, useReducer } from "react";
 import { PortfolioCardProps } from "../components/PortfolioCard";
 
+/* Contains info about the user portfolios : all the portfolios of user*/
 const UserContext = createContext<any>(null)
 
 export const useUser = () => useContext(UserContext)
-// Array<PortfolioCardProps
+
 export enum UserDataReducerActions{
   GET = "GET_DATA",
   SET = "SET_DATA"

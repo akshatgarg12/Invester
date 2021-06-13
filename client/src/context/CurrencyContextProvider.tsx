@@ -2,6 +2,7 @@ import {createContext, useContext, useEffect, useState} from 'react'
 import LoadingPage from '../components/Pages/Loading'
 import { currencyRates, Currency } from '../util/currency'
 
+/* Contains info about the currency:rates and user selected currency */
 const CurrencyContext = createContext<any>(null)
 
 export const useCurrency = () => useContext(CurrencyContext)

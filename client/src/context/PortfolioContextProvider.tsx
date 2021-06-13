@@ -2,7 +2,7 @@ import { createContext, useContext, useReducer } from "react";
 import { InvestmentData } from "../components/Investments";
 
 const PortfolioContext = createContext<any>(null)
-
+/* Contains info about the opened portfolio : all the assets and their info */
 export const usePortfolio = () => useContext(PortfolioContext)
 
 export enum PortfolioReducerAction{

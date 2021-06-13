@@ -20,7 +20,7 @@ import InvestmentInfo from '../InvestmentInfo';
 import { PortfolioReducerAction, usePortfolio } from '../../context/PortfolioContextProvider';
 import { getPortfolioData } from '../../util/custom';
 import LoadingPage from '../Pages/Loading';
-
+import {PieChart} from '../InvestmentGraphs'
 
 
 
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin:"10px auto",
     marginBottom:"30px"
   },
-  totalValueBox:{
+  box:{
     textAlign:"center",
     width:"98%",
     maxWidth:"1024px",
@@ -119,62 +119,66 @@ const Investments: React.FC<InvestmentsProps> = ({id}) => {
         open = {open}
         handleClose = {() => {setOpen(false)}}
       />
-      <Box className={classes.totalValueBox}>
+      <Box className={classes.box}>
         <InvestmentInfo />
       </Box>
     <div className={classes.root}>  
-    <Button 
-      startIcon={<RefreshIcon />}
-      onClick = {refreshHandler}
-    />
-    <div className = {classes.floatingBtn} onClick={()=>setOpen(true)}>
-      <Fab color="primary" size="small" aria-label="Add a new investment">
-          <AddIcon />
-      </Fab>
-    </div>
-     <Button
-        variant="outlined"
-        color="primary"
-        onClick={()=>setOpen(true)}
-        startIcon={<AddCircleOutlined />}
+      <Button 
+        startIcon={<RefreshIcon />}
+        onClick = {refreshHandler}
+      />
+      <div className = {classes.floatingBtn} onClick={()=>setOpen(true)}>
+        <Fab color="primary" size="small" aria-label="Add a new investment">
+            <AddIcon />
+        </Fab>
+      </div>
+      <Button
+          variant="outlined"
+          color="primary"
+          onClick={()=>setOpen(true)}
+          startIcon={<AddCircleOutlined />}
+          >
+          Add an investment
+        </Button>
+        <Paper color="default">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            centered
+            aria-label="full width tabs"
+          >
+          <Tab icon={<ShowChartIcon />} label="STOCKS" />
+          <Tab icon={<MonetizationOnIcon />} label="CRYPTO" />
+          <Tab icon={<MoneyIcon />} label="MUTUAL FUNDS" />
+          </Tabs>
+        </Paper>
+        <SwipeableViews
+          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+          index={value}
+          onChangeIndex={handleChangeIndex}
+          className={classes.tabs}
         >
-        Add an investment
-      </Button>
-      <Paper color="default">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          centered
-          aria-label="full width tabs"
-        >
-        <Tab icon={<ShowChartIcon />} label="STOCKS" />
-        <Tab icon={<MonetizationOnIcon />} label="CRYPTO" />
-        <Tab icon={<MoneyIcon />} label="MUTUAL FUNDS" />
-        </Tabs>
-      </Paper>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-        className={classes.tabs}
-      >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <InvestmentSection 
-          type={InvestmentType.STOCKS} />
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <InvestmentSection 
-          type={InvestmentType.CRYPTO} />
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <InvestmentSection 
-          type={InvestmentType.MUTUALFUNDS} />
-        </TabPanel>
-      </SwipeableViews>
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            <InvestmentSection 
+            type={InvestmentType.STOCKS} />
+          </TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            <InvestmentSection 
+            type={InvestmentType.CRYPTO} />
+          </TabPanel>
+          <TabPanel value={value} index={2} dir={theme.direction}>
+            <InvestmentSection 
+            type={InvestmentType.MUTUALFUNDS} />
+          </TabPanel>
+        </SwipeableViews>
     </div>
+     <Box className={classes.box}>
+        <PieChart />
+     </Box>
+   
     </Container>
   );
 }
